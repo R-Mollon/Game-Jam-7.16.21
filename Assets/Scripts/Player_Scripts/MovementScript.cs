@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour {
    
-    private float playerSpeed = 1.0f;
+    private float playerSpeed = 2.0f;
 
     private Rigidbody2D rigidBody;
     private Camera camera;
@@ -38,7 +38,7 @@ public class MovementScript : MonoBehaviour {
 
         // Move camera to center on player if camera is locked
         if(cameraLocked) {
-            camera.transform.position = rigidBody.position;
+            camera.transform.position = new Vector3(rigidBody.position.x, rigidBody.position.y, -10);
         }
 
     }
