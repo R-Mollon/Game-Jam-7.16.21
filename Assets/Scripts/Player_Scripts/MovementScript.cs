@@ -7,17 +7,19 @@ public class MovementScript : MonoBehaviour {
     private float playerSpeed = 1.0f;
 
     private Rigidbody2D rigidBody;
+    private Camera camera;
 
-    public Vector2 direction;
+    public bool cameraLocked = true;
 
     void Start() {
         rigidBody = GetComponent<Rigidbody2D>();
+        camera = GameObject.FindGameObjectsWithTag("MainCamera")[0].GetComponent<Camera>();
     }
 
 
     void FixedUpdate() {
 
-        direction = new Vector2(0, 0);
+        Vector2 direction = new Vector2(0, 0);
 
         if(Input.GetKey(KeyCode.W)) {
             direction.y = 1;
@@ -33,6 +35,11 @@ public class MovementScript : MonoBehaviour {
         }
 
         rigidBody.MovePosition(rigidBody.position + (direction * playerSpeed * Time.deltaTime));
+
+        // Move camera to center on player if camera is locked
+        if(cameraLocked) {
+            camera.transform.position = rigidBody.position;
+        }
 
     }
 
