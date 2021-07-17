@@ -5,7 +5,12 @@ using UnityEngine;
 public class MovementScript : MonoBehaviour {
    
     private float playerSpeed = 8.0f;
-    private int playerDirection = 0;
+    public int playerDirection = 0;
+    public bool attacking = false;
+
+    private int walkStage = 1;
+    private float walkTimer = 0.0f;
+    private float maxWalk = 20.0f;
 
     private Rigidbody2D rigidBody;
     private Camera camera;
@@ -25,22 +30,35 @@ public class MovementScript : MonoBehaviour {
     void Update() {
 
         Vector2 direction = new Vector2(0, 0);
+        bool walking = false;
 
         if(Input.GetKey(KeyCode.W)) {
+            walking = true;
             direction.y = 1;
-            playerDirection = 2;
+            if(!attacking) {
+                playerDirection = 2;
+            }
         }
         if(Input.GetKey(KeyCode.A)) {
+            walking = true;
             direction.x = -1;
-            playerDirection = 4;
+           if(!attacking) {
+                playerDirection = 3;
+            }
         }
         if(Input.GetKey(KeyCode.S)) {
+            walking = true;
             direction.y = -1;
-            playerDirection = 0;
+            if(!attacking) {
+                playerDirection = 0;
+            }
         }
         if(Input.GetKey(KeyCode.D)) {
+            walking = true;
             direction.x = 1;
-            playerDirection = 1;
+            if(!attacking) {
+                playerDirection = 1;
+            }
         }
 
         rigidBody.MovePosition(rigidBody.position + (direction * playerSpeed * Time.deltaTime));
@@ -50,7 +68,25 @@ public class MovementScript : MonoBehaviour {
             camera.transform.position = new Vector3(rigidBody.position.x, rigidBody.position.y, -10);
         }
 
-        playerSprite.sprite = playerSpriteList[playerDirection];
+        // Handle player sprite
+        if(!walking) {
+            walkStage = 1;
+            playerSprite.sprite = playerSpriteList[playerDirection * 4];
+        } else {
+
+            playerSprite.sprite = playerSpriteList[(playerDirection * 4) + walkStage];
+
+            walkTimer += Time.deltaTime * 40.0f;
+
+            if(walkTimer >= (maxWalk - playerSpeed)) {
+                walkStage++;
+                walkTimer = 0.0f;
+            }
+
+            if(walkStage > 3) {
+                walkStage = 0;
+            }
+        }
 
     }
 

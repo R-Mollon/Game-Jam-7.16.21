@@ -10,16 +10,20 @@ public class WeaponHandler : MonoBehaviour {
 	private float attackCooldown = 0.0f;
 	private float maxAttackCool  = 1.0f;
     private float swingPersist = 0.5f;
+    private float lastAngle = 0.0f;
 
 
     private Transform swingTransform;
-    private CapsuleCollider2D swingCollider;
+    private PolygonCollider2D swingCollider;
     private SpriteRenderer swingSprite;
+    private MovementScript moveScript;
 
     void Start() {
         swingTransform = GameObject.Find("Player/SwingContainer").GetComponent<Transform>();
-        swingCollider = GameObject.Find("Player/SwingContainer/SwingZone").GetComponent<CapsuleCollider2D>();
+        swingCollider = GameObject.Find("Player/SwingContainer/SwingZone").GetComponent<PolygonCollider2D>();
         swingSprite = GameObject.Find("Player/SwingContainer/SwingZone/SwingSprite").GetComponent<SpriteRenderer>();
+
+        moveScript = gameObject.GetComponent<MovementScript>();
     }
 
 	
@@ -37,7 +41,7 @@ public class WeaponHandler : MonoBehaviour {
     }
 
     void Update() {
-        // Unity seems to dislike me doing this async
+        // Unity seems to dislike doing this async
         if(Input.GetMouseButtonDown(0) && attackCooldown <= 0) {
             doAttack();
             attackCooldown = maxAttackCool;
@@ -54,11 +58,14 @@ public class WeaponHandler : MonoBehaviour {
 
         float angleRadians = Mathf.Atan2(xDelta, yDelta);
         float angle = (360 / (Mathf.PI * 2)) * angleRadians;
+        lastAngle = angle;
 
         swingTransform.localRotation = Quaternion.Euler(0, 0, angle);
 
         swingCollider.enabled = true;
         swingSprite.enabled = true;
+
+        moveScript.attacking = true;
 
         StartCoroutine("showAttack");
 		
@@ -70,11 +77,28 @@ public class WeaponHandler : MonoBehaviour {
         while(time < this.swingPersist) {
             time += Time.deltaTime;
 
+            // Face player towards swing
+            if(lastAngle >= -45.0f && lastAngle <= 45.0f) {
+                // Swinging up
+                moveScript.playerDirection = 2;
+            } else if(lastAngle >= -135.0f && lastAngle <= -45.0f) {
+                // Swinging right
+                moveScript.playerDirection = 1;
+            } else if(lastAngle >= 45.0f && lastAngle <= 135.0f) {
+                // Swinging left
+                moveScript.playerDirection = 3;
+            } else {
+                // Swinging down
+                moveScript.playerDirection = 0;
+            }
+
             yield return null;
         }
 
         swingCollider.enabled = false;
         swingSprite.enabled = false;
+
+        moveScript.attacking = false;
 
         yield return null;
     }
