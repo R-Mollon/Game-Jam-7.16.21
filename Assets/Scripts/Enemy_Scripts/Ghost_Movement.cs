@@ -37,7 +37,7 @@ public class Ghost_Movement : MonoBehaviour {
             Vector3 randomPosition;
             do {
                 randomPosition = Random.insideUnitCircle * teleportRadius;
-            } while(Vector3.Distance(randomPosition, player.transform.position) < minTeleRadius);
+            } while(Vector3.Distance(player.transform.position + randomPosition, player.transform.position) < minTeleRadius);
 
             // Teleport to position
             transform.position = player.transform.position + randomPosition;
