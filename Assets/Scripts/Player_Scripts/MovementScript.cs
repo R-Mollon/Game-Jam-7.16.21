@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour {
    
-    private float playerSpeed = 8.0f;
+    private float playerSpeed = 10.0f;
     public int playerDirection = 0;
     public bool attacking = false;
 

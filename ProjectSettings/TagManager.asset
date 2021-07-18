@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerAttack
   - Wall
+  - EnemyAttack
   layers:
   - Default
   - TransparentFX
@@ -45,6 +46,12 @@ TagManager:
     locked: 0
   - name: Floor
     uniqueID: 3823045661
+    locked: 0
+  - name: Floor
+    uniqueID: 176050433
+    locked: 0
+  - name: UnderPlayer
+    uniqueID: 2054647993
     locked: 0
   - name: PlayerSpace
     uniqueID: 95967241
