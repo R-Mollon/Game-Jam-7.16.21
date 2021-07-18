@@ -56,3 +56,9 @@ TagManager:
   - name: PlayerSpace
     uniqueID: 95967241
     locked: 0
+  - name: AbovePlayer
+    uniqueID: 2190094983
+    locked: 0
+  - name: AboveAll
+    uniqueID: 3686206367
+    locked: 0
