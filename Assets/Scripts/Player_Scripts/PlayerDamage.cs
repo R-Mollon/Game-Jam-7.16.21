@@ -111,6 +111,14 @@ public class PlayerDamage : MonoBehaviour {
                 Destroy(collider.gameObject);
                 damageTime = maxDmgTime;
             }
+
+            if(collider.name == "Ghost") {
+                Ghost_Movement script = collider.GetComponent<Ghost_Movement>();
+
+                playerHealth -= script.damage;
+                damageTime = maxDmgTime;
+                script.teleport = true;
+            }
         }
 
     }
