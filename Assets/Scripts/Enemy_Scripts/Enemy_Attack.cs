@@ -7,10 +7,19 @@ public class Enemy_Attack : MonoBehaviour {
     public float attackCooldown = 2.0f;
 
     private GameObject circleAttackPrefab;
+    private SpriteRenderer enemySprite;
+    private Sprite[] spriteList;
+
+    private bool attacking = false;
+    private int attackStage = 0;
+    private float attackTime = 0.0f;
+    private float maxAttTime = 0.5f;
 
     void Start() {
 
         circleAttackPrefab = Resources.Load<GameObject>("Prefabs/CircleAttack");
+        enemySprite = GetComponent<SpriteRenderer>();
+        spriteList = Resources.LoadAll<Sprite>("Sprites/Cultist");
 
         StartCoroutine("Attack");
     }
@@ -26,12 +35,35 @@ public class Enemy_Attack : MonoBehaviour {
                 cooldown -= Time.deltaTime;
             } else {
                 cooldown = attackCooldown;
+                attacking = true;
                 doCircleAttack();
             }
 
             yield return null;
         }
 
+    }
+
+
+    void Update() {
+        if(attacking) {
+            
+            if(attackStage > 4) {
+                attackStage = 0;
+                attacking = false;
+                enemySprite.sprite = spriteList[0];
+                return;
+            }
+
+            enemySprite.sprite = spriteList[2 + attackStage];
+
+            attackTime += Time.deltaTime;
+
+            if(attackTime >= maxAttTime) {
+                attackTime = 0;
+                attackStage++;
+            }
+        }
     }
 
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy_Damage : MonoBehaviour {
 
-    private float maxHealth = 10.0f;
+    private float maxHealth = 20.0f;
     public float health = 1.0f;
 
     private float damageTime = 0.0f;

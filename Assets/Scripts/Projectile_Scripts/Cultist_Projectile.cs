@@ -44,4 +44,12 @@ public class Cultist_Projectile : MonoBehaviour {
 
     }
 
+    void OnTriggerEnter2D(Collider2D other) {
+
+        if(other.tag == "Wall") {
+            Destroy(gameObject);
+        }
+
+    }
+
 }
