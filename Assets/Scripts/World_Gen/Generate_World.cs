@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Tilemaps;
 
 public class Generate_World : MonoBehaviour {
     
@@ -13,6 +14,8 @@ public class Generate_World : MonoBehaviour {
     private List<PlacedRoom> placedRooms;
     private List<string> listOfRooms;
 
+    private GameObject[] roomDecorations;
+
     private Transform roomsParent;
 
     void Start() {
@@ -21,6 +24,8 @@ public class Generate_World : MonoBehaviour {
         positionedRooms = new List<PositionedRoom>();
         placedRooms = new List<PlacedRoom>();
         roomsParent = GameObject.Find("World").transform;
+
+        roomDecorations = Resources.LoadAll<GameObject>("Prefabs/Room-Decoration");
         
         rooms.Add("Up", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Up"), true, false, false, false));
         rooms.Add("Left", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Left"), false, true, false, false));
@@ -273,11 +278,13 @@ public class Generate_World : MonoBehaviour {
         Instantiate(newRoom.room, new Vector3((bossRoomX * 25) + bossRoomOffsetX, (bossRoomY * 27) + bossRoomOffsetY, 0), Quaternion.identity, roomsParent);
 
         // Check if boss room is going to be clipping into other rooms
+        bool bossRoomObstructed = false;
         if(bossRoomDirection == "Up") {
             if(placedRooms.Exists(match => 
                 (match.xPosition >= bossRoomX - 1 && match.xPosition <= bossRoomX + 1) &&
                 (match.yPosition >= bossRoomY && match.yPosition <= bossRoomY + 2)
             )) {
+                bossRoomObstructed = true;
                 Generate();
             }
         } else if(bossRoomDirection == "Left") {
@@ -285,6 +292,7 @@ public class Generate_World : MonoBehaviour {
                 (match.xPosition >= bossRoomX && match.xPosition <= bossRoomX - 2) &&
                 (match.yPosition >= bossRoomY - 1 && match.yPosition <= bossRoomY + 1)
             )) {
+                bossRoomObstructed = true;
                 Generate();
             }
         } else if(bossRoomDirection == "Down") {
@@ -292,6 +300,7 @@ public class Generate_World : MonoBehaviour {
                 (match.xPosition >= bossRoomX - 1 && match.xPosition <= bossRoomX + 1) &&
                 (match.yPosition >= bossRoomY && match.yPosition <= bossRoomY - 2)
             )) {
+                bossRoomObstructed = true;
                 Generate();
             }
         } else if(bossRoomDirection == "Right") {
@@ -299,13 +308,109 @@ public class Generate_World : MonoBehaviour {
                 (match.xPosition >= bossRoomX && match.xPosition <= bossRoomX + 2) &&
                 (match.yPosition >= bossRoomY - 1 && match.yPosition <= bossRoomY + 1)
             )) {
+                bossRoomObstructed = true;
                 Generate();
             }
         }
-        
+
+        if(!bossRoomObstructed) {
+            decorateRooms();
+        }
 
         yield return null;
     }
+
+
+    void decorateRooms() {
+        for(int i = 0; i < placedRooms.Count; i++) {
+
+            // Get room we are trying to decorate
+            if(GameObject.Find("World").transform.childCount < i - 1) {
+                break;
+            }
+
+            GameObject room = GameObject.Find("World").transform.GetChild(i).gameObject;
+
+            // Select a random decoration pattern
+            int patternIndex = UnityEngine.Random.Range(0, roomDecorations.Length);
+            GameObject decoration = roomDecorations[patternIndex];
+
+            // Get tilemaps from room
+            Tilemap roomFloorTiles = room.transform.Find("Floor/Floor").GetComponent<Tilemap>();
+            Tilemap roomCeilingTiles = room.transform.Find("Ceiling/Ceiling").GetComponent<Tilemap>();
+            Tilemap roomColliderTiles = room.transform.Find("Collider/Collider").GetComponent<Tilemap>();
+
+            // Get tilemaps from decoration
+            Tilemap decorFloorTiles = decoration.transform.Find("Floor/Floor").GetComponent<Tilemap>();
+            Tilemap decorCeilingTiles = decoration.transform.Find("Ceiling/Ceiling").GetComponent<Tilemap>();
+            Tilemap decorColliderTiles = decoration.transform.Find("Collider/Collider").GetComponent<Tilemap>();
+
+
+            roomFloorTiles.CompressBounds();
+            decorFloorTiles.CompressBounds();
+
+            roomCeilingTiles.CompressBounds();
+            decorCeilingTiles.CompressBounds();
+
+            roomColliderTiles.CompressBounds();
+            decorColliderTiles.CompressBounds();
+
+
+            // Set floor tiles
+            BoundsInt roomBounds = roomFloorTiles.cellBounds;
+            TileBase[] roomTiles = roomFloorTiles.GetTilesBlock(roomBounds);
+
+            BoundsInt decorBounds = decorFloorTiles.cellBounds;
+            TileBase[] decorTiles = decorFloorTiles.GetTilesBlock(decorBounds);
+
+            for(int x = 0; x < decorBounds.size.x; x++) {
+                for(int y = 0; y < decorBounds.size.y; y++) {
+                    TileBase newTile = decorTiles[x + (y * decorBounds.size.x)];
+
+                    if(newTile != null) {
+                        roomFloorTiles.SetTile(new Vector3Int(x - 12, y - 14, 0), newTile);
+                    }
+                }
+            }
+
+            // Set ceiling tiles
+            roomBounds = roomCeilingTiles.cellBounds;
+            roomTiles = roomCeilingTiles.GetTilesBlock(roomBounds);
+
+            decorBounds = decorCeilingTiles.cellBounds;
+            decorTiles = decorCeilingTiles.GetTilesBlock(decorBounds);
+
+            for(int x = 0; x < decorBounds.size.x; x++) {
+                for(int y = 0; y < decorBounds.size.y; y++) {
+                    TileBase newTile = decorTiles[x + (y * decorBounds.size.x)];
+
+                    if(newTile != null) {
+                        roomCeilingTiles.SetTile(new Vector3Int(x - 12, y - 14, 0), newTile);
+                    }
+                }
+            }
+
+            // Set collider tiles
+            roomBounds = roomColliderTiles.cellBounds;
+            roomTiles = roomColliderTiles.GetTilesBlock(roomBounds);
+
+            decorBounds = decorColliderTiles.cellBounds;
+            decorTiles = decorColliderTiles.GetTilesBlock(decorBounds);
+
+            for(int x = 0; x < decorBounds.size.x; x++) {
+                for(int y = 0; y < decorBounds.size.y; y++) {
+                    TileBase newTile = decorTiles[x + (y * decorBounds.size.x)];
+
+                    if(newTile != null) {
+                        roomColliderTiles.SetTile(new Vector3Int(x - 12, y - 14, 0), newTile);
+                    }
+                }
+            }
+
+        }
+    }
+
+
 
     /*// Pick starting room
         int amntRooms = rooms.Count;
