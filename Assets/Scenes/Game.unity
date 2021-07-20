@@ -1536,9 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbc011974b9de1a43ae7027f5758d207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomsToBoss: 100
-  minOffshootSize: 5
-  maxOffshootSize: 20
+  roomsToBoss: 5
 --- !u!1 &1914896500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1656,9 +1654,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8193225, b: 0.6556604, a: 1}
-  m_Intensity: 1000
-  m_Range: 10000
+  m_Color: {r: 0.8396226, g: 0.50288945, b: 0.32079923, a: 1}
+  m_Intensity: 5000
+  m_Range: 10000000
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10

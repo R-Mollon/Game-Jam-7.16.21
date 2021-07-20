@@ -7,10 +7,6 @@ using System.Linq;
 public class Generate_World : MonoBehaviour {
     
     public int roomsToBoss;
-    public int minOffshootSize;
-    public int maxOffshootSize;
-
-    private int roomCount = 1;
 
     private Dictionary<string, RoomDefinition> rooms;
     private List<PositionedRoom> positionedRooms;
@@ -46,17 +42,34 @@ public class Generate_World : MonoBehaviour {
 
         rooms.Add("Up-Left-Down-Right", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Junction"), true, true, true, true));
 
+        rooms.Add("Boss-Up", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Boss-Up"), false, false, false, false));
+        rooms.Add("Boss-Left", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Boss-Left"), false, false, false, false));
+        rooms.Add("Boss-Down", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Boss-Down"), false, false, false, false));
+        rooms.Add("Boss-Right", new RoomDefinition(Resources.Load<GameObject>("Prefabs/Rooms/Boss-Right"), false, false, false, false));
+
         listOfRooms = new List<string>();
         string[] roomList = new[] {
             "Up", "Left", "Down", "Right", "Up-Left", "Left-Down", "Down-Right", "Right-Up",
-            "Up-Left-Down", "Left-Down-Right", "Down-Right-Up", "Right-Up-Left", "Up-Down",
-            "Left-Right", "Up-Left-Down-Right",
+            /*"Up-Left-Down", "Left-Down-Right", "Down-Right-Up", "Right-Up-Left",*/ "Up-Down",
+            "Left-Right", //"Up-Left-Down-Right",
         };
         listOfRooms.AddRange(roomList);
 
 
         StartCoroutine("BuildWorld");
 
+    }
+
+
+    void Generate() {
+        positionedRooms = new List<PositionedRoom>();
+        placedRooms = new List<PlacedRoom>();
+
+        foreach(Transform child in roomsParent) {
+            Destroy(child.gameObject);
+        }
+
+        StartCoroutine("BuildWorld");
     }
 
 
@@ -75,12 +88,12 @@ public class Generate_World : MonoBehaviour {
             int nextDirection;
             bool pickingDirection = true;
             int pickAttempts = 0;
+            int maxPickAttempts = 4;
             int newX = 0;
             int newY = 0;
             do {
                 // Bias the direction picked towards increasing magnitude of coordinates
                 nextDirection = UnityEngine.Random.Range(0, 4);
-
                 switch(nextDirection) {
                     case 0:
                         newX = currentRoom.xPosition;
@@ -99,31 +112,42 @@ public class Generate_World : MonoBehaviour {
                         newY = currentRoom.yPosition;
                         break;
                 }
-
                 pickingDirection = false;
-
                 // Make sure the picked direction is not an already existing room
                 if(positionedRooms.Exists(match => match.xPosition == newX && match.yPosition == newY)) {
                     pickingDirection = true;
                 } else {
-
-                    if(pickAttempts < 4) {
+                    if(pickAttempts < maxPickAttempts) {
                         if(Mathf.Abs(newX) < Mathf.Abs(currentRoom.xPosition) || Mathf.Abs(newY) < Mathf.Abs(currentRoom.yPosition)) {
                             // Try to pick again
                             pickingDirection = true;
                             pickAttempts++;
                         }
                     }
-
                 }
-
-                yield return null;
             } while(pickingDirection);
 
             positionedRooms.Add(new PositionedRoom(newX, newY));
 
             yield return null;
         }
+
+
+        // Assign starting room direction
+        string startingRoomDirection = "Up";
+        if(positionedRooms[1].yPosition == 1) {
+            startingRoomDirection = "Up";
+        } else if(positionedRooms[1].xPosition == -1) {
+            startingRoomDirection = "Left";
+        } else if(positionedRooms[1].yPosition == -1) {
+            startingRoomDirection = "Down";
+        } else if(positionedRooms[1].xPosition == 1) {
+            startingRoomDirection = "Right";
+        }
+        RoomDefinition newRoom = rooms[startingRoomDirection];
+        Instantiate(newRoom.room, new Vector3(0, 0, 0), Quaternion.identity, roomsParent);
+        placedRooms.Add(new PlacedRoom(0, 0, new[] {false, false, false, false}));
+
 
 
         // Build a path to boss;
@@ -134,38 +158,50 @@ public class Generate_World : MonoBehaviour {
             PositionedRoom currentRoom = positionedRooms[i];
             PositionedRoom nextRoom = positionedRooms[i + 1];
 
+            int nextRoomDir = 0;
+            int prevRoomDir = 0;
+
             // Remove dead ends from possible rooms
             List<string> filteredRooms = listOfRooms.Where(name => name.Contains("-")).ToList();
+
 
             // Get direction of next room based on coordinates and filter to that direction
             if(nextRoom.xPosition == currentRoom.xPosition && nextRoom.yPosition == currentRoom.yPosition + 1) {
                 // Next direction is up, filter to only rooms containing up
                 filteredRooms = filteredRooms.Where(name => name.Contains("Up")).ToList();
+                nextRoomDir = 0;
             } else if(nextRoom.xPosition == currentRoom.xPosition - 1 && nextRoom.yPosition == currentRoom.yPosition) {
                 // Next direction is left, filter to only rooms containing left
                 filteredRooms = filteredRooms.Where(name => name.Contains("Left")).ToList();
+                nextRoomDir = 1;
             } else if(nextRoom.xPosition == currentRoom.xPosition && nextRoom.yPosition == currentRoom.yPosition - 1) {
                 // Next direction is down, filter to only rooms containing down
                 filteredRooms = filteredRooms.Where(name => name.Contains("Down")).ToList();
+                nextRoomDir = 2;
             } else if(nextRoom.xPosition == currentRoom.xPosition + 1 && nextRoom.yPosition == currentRoom.yPosition) {
                 // Next direction is right, filter to only rooms containing right
                 filteredRooms = filteredRooms.Where(name => name.Contains("Right")).ToList();
+                nextRoomDir = 3;
             }
 
 
             // Get direction of previous room based on coordinates and filter to that direction
             if(previousRoom.xPosition == currentRoom.xPosition && previousRoom.yPosition == currentRoom.yPosition + 1) {
-                // Previous direction was up, filter to only rooms containing up
+                // Previous direction was down, filter to only rooms containing up
                 filteredRooms = filteredRooms.Where(name => name.Contains("Up")).ToList();
+                prevRoomDir = 0;
             } else if(previousRoom.xPosition == currentRoom.xPosition - 1 && previousRoom.yPosition == currentRoom.yPosition) {
-                // Previous direction was left, filter to only rooms containing left
+                // Previous direction was right, filter to only rooms containing left
                 filteredRooms = filteredRooms.Where(name => name.Contains("Left")).ToList();
+                prevRoomDir = 1;
             } else if(previousRoom.xPosition == currentRoom.xPosition && previousRoom.yPosition == currentRoom.yPosition - 1) {
-                // Previous direction was down, filter to only rooms containing down
+                // Previous direction was up, filter to only rooms containing down
                 filteredRooms = filteredRooms.Where(name => name.Contains("Down")).ToList();
+                prevRoomDir = 2;
             } else if(previousRoom.xPosition == currentRoom.xPosition + 1 && previousRoom.yPosition == currentRoom.yPosition) {
-                // Previous direction was right, filter to only rooms containing right
+                // Previous direction was left, filter to only rooms containing right
                 filteredRooms = filteredRooms.Where(name => name.Contains("Right")).ToList();
+                prevRoomDir = 3;
             }
 
 
@@ -173,46 +209,102 @@ public class Generate_World : MonoBehaviour {
             if(positionedRooms.Exists(room => room.xPosition == currentRoom.xPosition && room.yPosition == currentRoom.yPosition + 1
             && (room.xPosition != previousRoom.xPosition && room.yPosition != previousRoom.yPosition)
             && (room.xPosition != nextRoom.xPosition && room.yPosition != nextRoom.yPosition))) {
-
                 // A room exists above, and is not next or previous
                 filteredRooms = filteredRooms.Where(name => !name.Contains("Up")).ToList();
-
             }
             if(positionedRooms.Exists(room => room.xPosition == currentRoom.xPosition - 1 && room.yPosition == currentRoom.yPosition
             && (room.xPosition != previousRoom.xPosition && room.yPosition != previousRoom.yPosition)
             && (room.xPosition != nextRoom.xPosition && room.yPosition != nextRoom.yPosition))) {
-
                 // A room exists left, and is not next or previous
                 filteredRooms = filteredRooms.Where(name => !name.Contains("Left")).ToList();
-
             }
             if(positionedRooms.Exists(room => room.xPosition == currentRoom.xPosition && room.yPosition == currentRoom.yPosition - 1
             && (room.xPosition != previousRoom.xPosition && room.yPosition != previousRoom.yPosition)
             && (room.xPosition != nextRoom.xPosition && room.yPosition != nextRoom.yPosition))) {
-
                 // A room exists below, and is not next or previous
                 filteredRooms = filteredRooms.Where(name => !name.Contains("Down")).ToList();
-
             }
             if(positionedRooms.Exists(room => room.xPosition == currentRoom.xPosition + 1 && room.yPosition == currentRoom.yPosition
             && (room.xPosition != previousRoom.xPosition && room.yPosition != previousRoom.yPosition)
             && (room.xPosition != nextRoom.xPosition && room.yPosition != nextRoom.yPosition))) {
-
                 // A room exists right, and is not next or previous
                 filteredRooms = filteredRooms.Where(name => !name.Contains("Right")).ToList();
-
             }
+
 
             // Pick from the remaining list of possible rooms and place
             string roomSelection = filteredRooms[UnityEngine.Random.Range(0, filteredRooms.Count)];
-            RoomDefinition newRoom = rooms[roomSelection];
+            newRoom = rooms[roomSelection];
             Instantiate(newRoom.room, new Vector3(currentRoom.xPosition * 25, currentRoom.yPosition * 27, 0), Quaternion.identity, roomsParent);
-            placedRooms.Add(new PlacedRoom(currentRoom.xPosition, currentRoom.yPosition, newRoom.openings));
+            PlacedRoom placedRoom = new PlacedRoom(currentRoom.xPosition, currentRoom.yPosition, newRoom.openings);
 
+            placedRoom.openings[nextRoomDir] = false;
+            placedRoom.openings[prevRoomDir] = false;
+            
+            placedRooms.Add(placedRoom);
+
+            yield return null;
         }
 
-        yield return null;
+        // Place boss room
+        string bossRoomDirection = "Up";
+        int amntPositionedRooms = positionedRooms.Count - 1;
 
+        int bossRoomX = positionedRooms[amntPositionedRooms].xPosition;
+        int bossRoomY = positionedRooms[amntPositionedRooms].yPosition;
+
+        int bossRoomOffsetX = 0;
+        int bossRoomOffsetY = 0;
+
+        if(bossRoomY == positionedRooms[amntPositionedRooms - 1].yPosition - 1) {
+            bossRoomDirection = "Up";
+            bossRoomOffsetY = -15;
+        } else if(bossRoomX == positionedRooms[amntPositionedRooms - 1].xPosition + 1) {
+            bossRoomDirection = "Left";
+            bossRoomOffsetX = 15;
+        } else if(bossRoomY == positionedRooms[amntPositionedRooms - 1].yPosition + 1) {
+            bossRoomDirection = "Down";
+            bossRoomOffsetY = 15;
+        } else if(bossRoomX == positionedRooms[amntPositionedRooms - 1].xPosition - 1) {
+            bossRoomDirection = "Right";
+            bossRoomOffsetX = -15;
+        }
+        newRoom = rooms["Boss-" + bossRoomDirection];
+        Instantiate(newRoom.room, new Vector3((bossRoomX * 25) + bossRoomOffsetX, (bossRoomY * 27) + bossRoomOffsetY, 0), Quaternion.identity, roomsParent);
+
+        // Check if boss room is going to be clipping into other rooms
+        if(bossRoomDirection == "Up") {
+            if(placedRooms.Exists(match => 
+                (match.xPosition >= bossRoomX - 1 && match.xPosition <= bossRoomX + 1) &&
+                (match.yPosition >= bossRoomY && match.yPosition <= bossRoomY + 2)
+            )) {
+                Generate();
+            }
+        } else if(bossRoomDirection == "Left") {
+            if(placedRooms.Exists(match => 
+                (match.xPosition >= bossRoomX && match.xPosition <= bossRoomX - 2) &&
+                (match.yPosition >= bossRoomY - 1 && match.yPosition <= bossRoomY + 1)
+            )) {
+                Generate();
+            }
+        } else if(bossRoomDirection == "Down") {
+            if(placedRooms.Exists(match => 
+                (match.xPosition >= bossRoomX - 1 && match.xPosition <= bossRoomX + 1) &&
+                (match.yPosition >= bossRoomY && match.yPosition <= bossRoomY - 2)
+            )) {
+                Generate();
+            }
+        } else if(bossRoomDirection == "Right") {
+            if(placedRooms.Exists(match => 
+                (match.xPosition >= bossRoomX && match.xPosition <= bossRoomX + 2) &&
+                (match.yPosition >= bossRoomY - 1 && match.yPosition <= bossRoomY + 1)
+            )) {
+                Generate();
+            }
+        }
+        
+
+        yield return null;
     }
 
     /*// Pick starting room
@@ -406,6 +498,83 @@ public class Generate_World : MonoBehaviour {
 
             yield return null;
         }*/
+
+        /*
+        // Place first room
+            positionedRooms.Add(new PositionedRoom(newX, newY));
+
+            int initialCount = positionedRooms.Count;
+            bool continuePlacing = true;
+            int i;
+            for(i = 0; i < numRooms && continuePlacing; i++) {
+
+                PositionedRoom currentRoom = positionedRooms[initialCount + i - 1];
+                
+                // Choose next direction
+                bool choosingDirection = true;
+                int nextDirection = 0;
+                do {
+                    nextDirection = UnityEngine.Random.Range(0, 4);
+                    switch(nextDirection) {
+                        case 0:
+                            newX = currentRoom.xPosition;
+                            newY = currentRoom.yPosition + 1;
+                            break;
+                        case 1:
+                            newX = currentRoom.xPosition - 1;
+                            newY = currentRoom.yPosition;
+                            break;
+                        case 2:
+                            newX = currentRoom.xPosition;
+                            newY = currentRoom.yPosition - 1;
+                            break;
+                        case 3:
+                            newX = currentRoom.xPosition + 1;
+                            newY = currentRoom.yPosition;
+                            break;
+                    }
+
+                    Debug.Log("Choosing at " + newX + ", " + newY);
+
+                    choosingDirection = false;
+
+                    // Make sure the picked direction is not an already existing room
+                    if(positionedRooms.Exists(match => match.xPosition == newX && match.yPosition == newY)) {
+                        choosingDirection = true;
+
+                        // Check if a room can be positioned
+                        if(positionedRooms.Exists(match => match.xPosition == currentRoom.xPosition && match.yPosition == currentRoom.yPosition + 1) &&
+                        positionedRooms.Exists(match => match.xPosition == currentRoom.xPosition - 1 && match.yPosition == currentRoom.yPosition) &&
+                        positionedRooms.Exists(match => match.xPosition == currentRoom.xPosition && match.yPosition == currentRoom.yPosition - 1) &&
+                        positionedRooms.Exists(match => match.xPosition == currentRoom.xPosition + 1 && match.yPosition == currentRoom.yPosition)) {
+                            choosingDirection = false;
+                            continuePlacing = false;
+                        }
+                    }
+
+                    yield return null;
+                } while(choosingDirection);
+
+                if(continuePlacing) {
+                    positionedRooms.Add(new PositionedRoom(newX, newY));
+                }
+
+                yield return null;
+            }
+
+            for(int j = 0; j < i; j++) {
+
+                PositionedRoom currentRoom = positionedRooms[initialCount + j - 1];
+
+                newRoom = rooms["Up-Left-Down-Right"];
+                Instantiate(newRoom.room, new Vector3(currentRoom.xPosition * 25, currentRoom.yPosition * 27, 0), Quaternion.identity, roomsParent);
+                PlacedRoom placedRoom = new PlacedRoom(currentRoom.xPosition, currentRoom.yPosition, new[] {false, false, false, false});
+
+                placedRooms.Add(placedRoom);
+            }
+
+            roomsWithOpenings = roomsWithOpenings.Where(room => room.hasOpenings()).ToList();
+            */
 
 
 }

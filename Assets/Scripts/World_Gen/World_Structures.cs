@@ -45,6 +45,10 @@ public class PlacedRoom {
        this.openings = openings;
     }
 
+    public bool hasOpenings() {
+        return (openings[0] || openings[1] || openings[2] || openings[3]);
+    }
+
     public int xPosition;
     public int yPosition;
 
