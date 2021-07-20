@@ -8,7 +8,7 @@ public class Enemy_Damage : MonoBehaviour {
     public float health = 1.0f;
 
     private float damageTime = 0.0f;
-    private float maxDmgTime = 0.75f;
+    private float maxDmgTime = 0.1f;
     
     
     void OnTriggerEnter2D(Collider2D collider) {

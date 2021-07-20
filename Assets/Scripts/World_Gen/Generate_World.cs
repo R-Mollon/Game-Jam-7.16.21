@@ -390,6 +390,12 @@ public class Generate_World : MonoBehaviour {
                 }
             }
 
+            // Special rule for 'pit' designs
+            if(decoration.name.Contains("Pit")) {
+                Instantiate(decoration.transform.Find("Collider").gameObject, new Vector3(placedRooms[i].xPosition * 25, placedRooms[i].yPosition * 27, 0), Quaternion.identity, roomsParent);
+                continue;
+            }
+
             // Set collider tiles
             roomBounds = roomColliderTiles.cellBounds;
             roomTiles = roomColliderTiles.GetTilesBlock(roomBounds);

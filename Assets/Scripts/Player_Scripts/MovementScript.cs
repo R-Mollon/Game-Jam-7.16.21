@@ -7,6 +7,7 @@ public class MovementScript : MonoBehaviour {
     private float playerSpeed = 10.0f;
     public int playerDirection = 0;
     public bool attacking = false;
+    public bool canMove = true;
 
     private int walkStage = 1;
     private float walkTimer = 0.0f;
@@ -61,7 +62,9 @@ public class MovementScript : MonoBehaviour {
             }
         }
 
-        rigidBody.MovePosition(rigidBody.position + (direction * playerSpeed * Time.deltaTime));
+        if(canMove) {
+            rigidBody.MovePosition(rigidBody.position + (direction * playerSpeed * Time.deltaTime));
+        }
 
         // Move camera to center on player if camera is locked
         if(cameraLocked) {

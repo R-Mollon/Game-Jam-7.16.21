@@ -7,6 +7,7 @@ TagManager:
   - PlayerAttack
   - Wall
   - EnemyAttack
+  - Pit
   layers:
   - Default
   - TransparentFX

@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 83529487673609}
   - component: {fileID: 83529487673607}
   - component: {fileID: 83529487673605}
+  - component: {fileID: -4910615282574033205}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: EnemyAttack
@@ -209,3 +210,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.2
+--- !u!114 &-4910615282574033205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83529487673608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c222f79bc755e3a4e8084e96b05fa9a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1

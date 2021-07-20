@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Cultist_Projectile : MonoBehaviour {
-    
-    public int damage = 1;
 
     public bool doneSpawning = false;
 

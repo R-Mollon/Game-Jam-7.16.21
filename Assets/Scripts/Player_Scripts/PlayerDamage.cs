@@ -105,22 +105,25 @@ public class PlayerDamage : MonoBehaviour {
 
         if(damageTime <= 0.01f) {
             if(collider.tag == "EnemyAttack") {
-                Cultist_Projectile damageScript = collider.GetComponent<Cultist_Projectile>();
+                Damage_Storage damageScript = collider.GetComponent<Damage_Storage>();
 
-                playerHealth -= damageScript.damage;
+                onDamage((int) Mathf.Floor(damageScript.damage));
                 Destroy(collider.gameObject);
-                damageTime = maxDmgTime;
             }
 
-            if(collider.name == "Ghost") {
+            if(collider.name == "Ghost" || collider.name == "GreenGhost") {
                 Ghost_Movement script = collider.GetComponent<Ghost_Movement>();
 
-                playerHealth -= script.damage;
-                damageTime = maxDmgTime;
+                onDamage(script.damage);
                 script.teleport = true;
             }
         }
 
+    }
+
+    public void onDamage(int damage) {
+        playerHealth -= damage;
+        damageTime = maxDmgTime;
     }
 
 

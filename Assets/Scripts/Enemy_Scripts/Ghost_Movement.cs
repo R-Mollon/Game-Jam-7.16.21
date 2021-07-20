@@ -7,13 +7,20 @@ public class Ghost_Movement : MonoBehaviour {
     public int damage;
 
     public bool teleport = false;
+    private bool attacking = false;
 
-    private float speed = 0.75f;
+    public bool doesFire;
+    public float maxAttkCooldown;
+
+    public float speed;
+
+    public string spritesName;
+
     private float teleportRadius = 8.0f;
     private float minTeleRadius = 5.0f;
 
     private float damageCooldown = 0.0f;
-    private float maxDmgCooldown = 0.75f;
+    private float maxDmgCooldown = 0.1f;
 
     private float health = 1.0f;
     private float maxHealth = 15.0f;
@@ -26,11 +33,17 @@ public class Ghost_Movement : MonoBehaviour {
         health = maxHealth;
 
         StartCoroutine("HoverAnimation");
+
+        if(doesFire) {
+            StartCoroutine("Attack");
+        }
     }
 
 
     void Update() {
-        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        if(!attacking) {
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        }
 
         if(teleport) {
             // Pick a position around player
@@ -62,7 +75,7 @@ public class Ghost_Movement : MonoBehaviour {
         float maxTimer = 0.5f;
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Sprite[] animSprites = Resources.LoadAll<Sprite>("Sprites/Ghost");
+        Sprite[] animSprites = Resources.LoadAll<Sprite>("Sprites/" + spritesName);
 
         while(true) {
             timer += Time.deltaTime;
@@ -77,7 +90,47 @@ public class Ghost_Movement : MonoBehaviour {
                 }
             }
 
-            spriteRenderer.sprite = animSprites[animStage];
+            if(!attacking) {
+                spriteRenderer.sprite = animSprites[animStage];
+            }
+
+            yield return null;
+        }
+    }
+
+
+    IEnumerator Attack() {
+        float attackTimer = maxAttkCooldown;
+
+        int animStage = 0;
+        float animTimer = 0.0f;
+        float maxAnimTimer = 0.25f;
+
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Sprite[] animSprites = Resources.LoadAll<Sprite>("Sprites/" + spritesName);
+
+        while(true) {
+            attackTimer += Time.deltaTime;
+
+            if(attackTimer >= maxAttkCooldown) {
+                animTimer += Time.deltaTime;
+                attacking = true;
+
+                if(animTimer >= maxAnimTimer) {
+                    animStage++;
+                    animTimer = 0.0f;
+
+                    if(animStage > 3) {
+                        attacking = false;
+                        animStage = 0;
+                        attackTimer = 0.0f;
+
+                        Instantiate(Resources.Load<GameObject>("Prefabs/GreenGhostProjectile"), transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity, GameObject.Find("Projectiles").transform);
+                    }
+                }
+
+                spriteRenderer.sprite = animSprites[4 + animStage];
+            }
 
             yield return null;
         }
