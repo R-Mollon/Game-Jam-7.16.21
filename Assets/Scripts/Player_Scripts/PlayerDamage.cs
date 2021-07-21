@@ -111,7 +111,7 @@ public class PlayerDamage : MonoBehaviour {
                 Destroy(collider.gameObject);
             }
 
-            if(collider.name == "Ghost" || collider.name == "GreenGhost") {
+            if(collider.tag == "Ghost") {
                 Ghost_Movement script = collider.GetComponent<Ghost_Movement>();
 
                 onDamage(script.damage);

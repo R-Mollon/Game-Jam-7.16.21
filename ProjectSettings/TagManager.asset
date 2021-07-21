@@ -8,6 +8,8 @@ TagManager:
   - Wall
   - EnemyAttack
   - Pit
+  - BigGreenGhost
+  - Ghost
   layers:
   - Default
   - TransparentFX

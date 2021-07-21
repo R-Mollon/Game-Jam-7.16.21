@@ -9,7 +9,7 @@ public class WeaponHandler : MonoBehaviour {
 	
 	private float attackCooldown = 0.0f;
 	private float maxAttackCool  = 1.0f;
-    private float swingPersist = 0.5f;
+    private float swingPersist = 0.1f;
     private float lastAngle = 0.0f;
 
 
