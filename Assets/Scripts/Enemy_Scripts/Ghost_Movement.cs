@@ -20,15 +20,19 @@ public class Ghost_Movement : MonoBehaviour {
     private float minTeleRadius = 5.0f;
 
     private float damageCooldown = 0.0f;
-    private float maxDmgCooldown = 0.1f;
+    private float maxDmgCooldown = 0.5f;
 
     private float health = 1.0f;
     private float maxHealth = 15.0f;
     
     private GameObject player;
 
+    private SpriteRenderer spriteRenderer;
+
     void Start() {
         player = GameObject.Find("Player");
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         health = maxHealth;
 
@@ -60,6 +64,8 @@ public class Ghost_Movement : MonoBehaviour {
 
         if(damageCooldown > 0.0f) {
             damageCooldown -= Time.deltaTime;
+
+            spriteRenderer.color = new Color(1, (255 - (damageCooldown * 400)) / 255f, (255 - (damageCooldown * 400)) / 255f, 35f / 255f);
 
             if(damageCooldown < 0.0f) {
                 damageCooldown = 0.0f;

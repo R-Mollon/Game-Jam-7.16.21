@@ -1,25 +1,25 @@
 fileFormatVersion: 2
-guid: 57f25fdfb91349b4d855186855f6871f
+guid: 3fb3bf73f7f2b8548bc28c7733fe2963
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4820724614979785437
-    second: DoorVertical_0
+      213: -574128092676464210
+    second: SwingAnimation_0
   - first:
-      213: -5714744835955293900
-    second: DoorVertical_1
+      213: -5331473237802335157
+    second: SwingAnimation_1
   - first:
-      213: -55386670726125907
-    second: DoorVertical_2
+      213: -668860436059963816
+    second: SwingAnimation_2
   - first:
-      213: 2151020581995041742
-    second: DoorVertical_0
+      213: -1683590493294258236
+    second: SwingAnimation_3
   - first:
-      213: 1754948967139419910
-    second: DoorVertical_1
+      213: -3712694077257283775
+    second: SwingAnimation_4
   - first:
-      213: 1402583151421678782
-    second: DoorVertical_2
+      213: 7839228169060936706
+    second: SwingAnimation_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -63,7 +63,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 15
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DoorVertical_0
+      name: SwingAnimation_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,20 +131,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec35e5e92d5f9dd10800000000000000
-      internalID: 2151020581995041742
+      spriteID: ea16274aa894808f0800000000000000
+      internalID: -574128092676464210
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DoorVertical_1
+      name: SwingAnimation_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b444a4b665dc206b0800000000000000
+      internalID: -5331473237802335157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwingAnimation_2
       rect:
         serializedVersion: 2
         x: 64
         y: 0
-        width: 64
-        height: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,20 +173,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 607a84999c4da5810800000000000000
-      internalID: 1754948967139419910
+      spriteID: 85e35582afab7b6f0800000000000000
+      internalID: -668860436059963816
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DoorVertical_2
+      name: SwingAnimation_3
       rect:
         serializedVersion: 2
-        x: 128
+        x: 96
         y: 0
-        width: 64
-        height: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,8 +194,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb4ef6ce1f9f67310800000000000000
-      internalID: 1402583151421678782
+      spriteID: 4c798fbcd5fa2a8e0800000000000000
+      internalID: -1683590493294258236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwingAnimation_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 147026d486cd97cc0800000000000000
+      internalID: -3712694077257283775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwingAnimation_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20cec1a5c788acc60800000000000000
+      internalID: 7839228169060936706
       vertices: []
       indices: 
       edges: []

@@ -18,10 +18,14 @@ public class WeaponHandler : MonoBehaviour {
     private SpriteRenderer swingSprite;
     private MovementScript moveScript;
 
+    private Sprite[] swingSprites;
+
     void Start() {
         swingTransform = GameObject.Find("Player/SwingContainer").GetComponent<Transform>();
         swingCollider = GameObject.Find("Player/SwingContainer/SwingZone").GetComponent<PolygonCollider2D>();
         swingSprite = GameObject.Find("Player/SwingContainer/SwingZone/SwingSprite").GetComponent<SpriteRenderer>();
+
+        swingSprites = Resources.LoadAll<Sprite>("Sprites/SwingAnimation");
 
         moveScript = gameObject.GetComponent<MovementScript>();
     }
@@ -74,7 +78,7 @@ public class WeaponHandler : MonoBehaviour {
     IEnumerator showAttack() {
         float time = 0f;
 
-        while(time < this.swingPersist) {
+        while(time < swingPersist) {
             time += Time.deltaTime;
 
             // Face player towards swing
@@ -91,6 +95,9 @@ public class WeaponHandler : MonoBehaviour {
                 // Swinging down
                 moveScript.playerDirection = 0;
             }
+
+            int animFrame = (int) Mathf.Clamp(((time / swingPersist) * 5), 0, 5);
+            swingSprite.sprite = swingSprites[animFrame];
 
             yield return null;
         }

@@ -8,8 +8,9 @@ public class Enemy_Damage : MonoBehaviour {
     public float health = 1.0f;
 
     private float damageTime = 0.0f;
-    private float maxDmgTime = 0.1f;
+    private float maxDmgTime = 0.5f;
     
+    private SpriteRenderer spriteRenderer;
     
     void OnTriggerEnter2D(Collider2D collider) {
 
@@ -29,12 +30,14 @@ public class Enemy_Damage : MonoBehaviour {
 
 
     void onDeath() {
-        this.gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
 
     void Start() {
         health = maxHealth;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
 
@@ -42,6 +45,8 @@ public class Enemy_Damage : MonoBehaviour {
 
         if(damageTime > 0.0f) {
             damageTime -= Time.deltaTime;
+
+            spriteRenderer.color = new Color(1, (255 - (damageTime * 400)) / 255f, (255 - (damageTime * 400)) / 255f, 1f);
         }
 
         if(damageTime <= 0.0f) {
