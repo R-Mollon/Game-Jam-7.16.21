@@ -9,6 +9,7 @@ public class RoomHandler : MonoBehaviour {
     private bool roomCompleted = false;
 
     public GameObject[] doors;
+    public GameObject[] torches;
     private Sprite[] doorSprites;
     private Sprite[] vertSprites;
 
@@ -34,6 +35,10 @@ public class RoomHandler : MonoBehaviour {
         int roomType = Random.Range(0, 10);
         if(roomType == 7) {
             Instantiate(Resources.Load<GameObject>("prefabs/Chest"), transform.position, Quaternion.identity);
+            // Light torches
+            for(int i = 0; i < torches.Length; i++) {
+                torches[i].GetComponent<TorchHandler>().light();
+            }
             return;
         }
 
@@ -73,6 +78,12 @@ public class RoomHandler : MonoBehaviour {
             GameObject itemToSpawn = spawnManager.GetComponent<ItemSpawnManager>().genRandomRoomReward();
 
             Instantiate(itemToSpawn, transform.position, Quaternion.identity, spawnManager.transform);
+
+
+            // Light torches
+            for(int i = 0; i < torches.Length; i++) {
+                torches[i].GetComponent<TorchHandler>().light();
+            }
 
         }
     }

@@ -18,15 +18,92 @@ public class BigGreenGhost : MonoBehaviour {
 
     private float invulnerability = 0.0f;
 
+    private AudioClip[] deathClips;
+    private AudioSource audioSource;
+
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteSheet = Resources.LoadAll<Sprite>("Sprites/Bosses/BigGreenGhost");
+
+        deathClips = Resources.LoadAll<AudioClip>("Sounds/SFX/BossExplosion");
+        audioSource = GetComponent<AudioSource>();
 
         health = maxHealth;
 
         StartCoroutine("Spawn");
 
         StartCoroutine("Attack");
+    }
+
+
+    void Update() {
+
+        if(health <= 0.0f && !dead) {
+            StopAllCoroutines();
+
+            dead = true;
+
+            Destroy(transform.Find("Spawns").gameObject);
+
+            GameObject.Find("BossMusic").GetComponent<AudioSource>().Stop();
+
+            StartCoroutine("DeathAnimation");
+        }
+
+    }
+
+
+    IEnumerator DeathAnimation() {
+        int animStage = 10;
+        float timer = 0.0f;
+        float maxTimer = 0.75f;
+
+        float globalTimer = 0.0f;
+
+        int audioTimer = 0;
+        bool currentDirection = false;
+
+        transform.localPosition += transform.right * 0.125f;
+
+        while(true) {
+            timer += Time.deltaTime;
+            globalTimer += Time.deltaTime;
+
+            if(timer >= maxTimer) {
+                timer = 0f;
+                animStage--;
+            }
+
+            if(globalTimer > audioTimer * 0.10f) {
+                audioTimer++;
+                audioSource.PlayOneShot(deathClips[Random.Range(0, deathClips.Length)], 0.10f);
+
+                if(currentDirection) {
+                    transform.localPosition += transform.right * 0.25f;
+                    currentDirection = false;
+                } else {
+                    transform.localPosition += transform.right * -0.25f;
+                    currentDirection = true;
+                }
+            }
+
+            if(animStage < 1) {
+                animStage = 0;
+                break;
+            }
+
+            spriteRenderer.sprite = spriteSheet[animStage];
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.15f);
+
+        Instantiate(Resources.Load<GameObject>("Prefabs/Items/GreenSludgeItem"), transform.position - transform.up, Quaternion.identity);
+
+        Destroy(gameObject);
+
+        yield return null;
     }
 
 
@@ -125,6 +202,7 @@ public class BigGreenGhost : MonoBehaviour {
 
                     for(int i = 0; i < offsets[attackAngle].Length; i++) {
                         Instantiate(projectile, transform.position + offsets[attackAngle][i], Quaternion.identity, projectilesParent);
+                        audioSource.Play();
                     }
 
                     attackAngle++;
@@ -175,7 +253,7 @@ public class BigGreenGhost : MonoBehaviour {
 
                 for(int i = 0; i < offsets.Length; i++) {
                     GameObject enemy = ghosts[UnityEngine.Random.Range(0, 2)];
-                    Instantiate(enemy, transform.position + offsets[i], Quaternion.identity);
+                    Instantiate(enemy, transform.position + offsets[i], Quaternion.identity, transform.Find("Spawns"));
                 }
 
                 attackTimer = 0.0f;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Circle_Attack : MonoBehaviour {
 
     public float angle = 0.0f;
-    private float speed = 15.0f;
+    private float speed = 8.0f;
 
     private float lifetime = 0.0f;
     public float maxLifetime = 80.0f;

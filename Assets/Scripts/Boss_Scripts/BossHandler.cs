@@ -12,6 +12,7 @@ public class BossHandler : MonoBehaviour {
     private GameObject mainCamera;
 
     private MovementScript moveScript;
+    private WeaponHandler attackScript;
 
     private AudioSource worldMusic;
     private AudioSource bossMusic;
@@ -31,6 +32,7 @@ public class BossHandler : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if(!started && other.name == "Player") {
             moveScript = other.GetComponent<MovementScript>();
+            attackScript = other.GetComponent<WeaponHandler>();
 
             started = true;
 
@@ -41,6 +43,7 @@ public class BossHandler : MonoBehaviour {
 
     IEnumerator StartFight() {
         moveScript.canMove = false;
+        attackScript.canAttack = false;
         moveScript.cameraLocked = false;
 
         Transform spawnSpot = GameObject.Find("Room-Middle").transform;
@@ -79,6 +82,7 @@ public class BossHandler : MonoBehaviour {
 
 
         moveScript.canMove = true;
+        attackScript.canAttack = true;
         moveScript.cameraLocked = true;
 
         StartCoroutine("FillBar");
@@ -97,8 +101,16 @@ public class BossHandler : MonoBehaviour {
             bossBar.rectTransform.sizeDelta = new Vector2(395f * healthPercentage, 15);
             bossBar.rectTransform.localPosition = new Vector3((395f - (395f * healthPercentage)) / -2, -196, 0);
 
+            if(ghostBoss.health <= 0) {
+                break;
+            }
+
             yield return null;
         }
+
+        yield return new WaitForSeconds(6.0f);
+
+        showBar.alpha = 0;
 
     }
 

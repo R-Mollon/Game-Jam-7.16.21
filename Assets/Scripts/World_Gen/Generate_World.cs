@@ -66,24 +66,27 @@ public class Generate_World : MonoBehaviour {
         };
         listOfRooms.AddRange(roomList);
 
-
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 30;
-        Time.timeScale = 0.75f;
+        Application.targetFrameRate = 60;
 
+        GameObject.Find("Player").GetComponent<MovementScript>().canMove = false;
+        GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = false;
 
         StartCoroutine("BuildWorld");
 
     }
 
 
-    void Generate() {
+    public void Generate() {
         positionedRooms = new List<PositionedRoom>();
         placedRooms = new List<PlacedRoom>();
 
         foreach(Transform child in roomsParent) {
             Destroy(child.gameObject);
         }
+
+        GameObject.Find("Player").GetComponent<MovementScript>().canMove = false;
+        GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = false;
 
         StartCoroutine("BuildWorld");
     }
@@ -327,6 +330,7 @@ public class Generate_World : MonoBehaviour {
         if(!bossRoomObstructed) {
             decorateRooms();
             loadingScreen.alpha = 0;
+            GameObject.Find("HUD/LoadingNewFloor").GetComponent<CanvasGroup>().alpha = 0;
             GameObject.Find("Player").GetComponent<MovementScript>().canMove = true;
             GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = true;
         }
