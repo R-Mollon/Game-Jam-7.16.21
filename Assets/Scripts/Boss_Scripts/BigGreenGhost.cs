@@ -101,6 +101,14 @@ public class BigGreenGhost : MonoBehaviour {
 
         Instantiate(Resources.Load<GameObject>("Prefabs/Items/GreenSludgeItem"), transform.position - transform.up, Quaternion.identity);
 
+        // Spawn next floor portal
+        Transform playerTransform = GameObject.Find("Player").transform;
+        if(playerTransform.position.y > transform.position.y) {
+            Instantiate(Resources.Load<GameObject>("Prefabs/NextFloorPortal"), transform.position - (transform.up * 4), Quaternion.identity);
+        } else {
+            Instantiate(Resources.Load<GameObject>("Prefabs/NextFloorPortal"), transform.position + (transform.up * 3), Quaternion.identity);
+        }
+
         Destroy(gameObject);
 
         yield return null;

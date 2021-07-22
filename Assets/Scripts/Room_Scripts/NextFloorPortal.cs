@@ -5,6 +5,15 @@ using UnityEngine.UI;
 
 public class NextFloorPortal : MonoBehaviour {
     
+    private Transform sprite;
+
+    void Start() {
+        sprite = transform.Find("Sprite");
+    }
+
+    void Update() {
+        sprite.Rotate(0, 0, Time.deltaTime * 20.0f);
+    }
 
     void OnTriggerEnter2D(Collider2D other) {
 

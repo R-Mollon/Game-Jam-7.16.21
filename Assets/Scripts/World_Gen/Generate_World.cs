@@ -97,6 +97,8 @@ public class Generate_World : MonoBehaviour {
         // Add starting room
         positionedRooms.Add(new PositionedRoom(0, 0));
 
+        bool failedGen = false;
+
         // Build a path to boss;
         //      Pass one: Determine path to boss
         for(int i = 1; i < roomsToBoss; i++) {
@@ -107,7 +109,7 @@ public class Generate_World : MonoBehaviour {
             int nextDirection;
             bool pickingDirection = true;
             int pickAttempts = 0;
-            int maxPickAttempts = 4;
+            int maxPickAttempts = 3;
             int newX = 0;
             int newY = 0;
             do {
@@ -135,6 +137,17 @@ public class Generate_World : MonoBehaviour {
                 // Make sure the picked direction is not an already existing room
                 if(positionedRooms.Exists(match => match.xPosition == newX && match.yPosition == newY)) {
                     pickingDirection = true;
+
+                     if(positionedRooms.Exists(match =>
+                        (match.xPosition == currentRoom.xPosition && match.yPosition == currentRoom.yPosition + 1) &&
+                        (match.xPosition == currentRoom.xPosition - 1 && match.yPosition == currentRoom.yPosition) &&
+                        (match.xPosition == currentRoom.xPosition && match.yPosition == currentRoom.yPosition - 1) &&
+                        (match.xPosition == currentRoom.xPosition + 1 && match.yPosition == currentRoom.yPosition)
+                     )) {
+                         // No room can be placed
+                        failedGen = true;
+                        pickingDirection = false;
+                     }
                 } else {
                     if(pickAttempts < maxPickAttempts) {
                         if(Mathf.Abs(newX) < Mathf.Abs(currentRoom.xPosition) || Mathf.Abs(newY) < Mathf.Abs(currentRoom.yPosition)) {
@@ -144,6 +157,8 @@ public class Generate_World : MonoBehaviour {
                         }
                     }
                 }
+
+                yield return null;
             } while(pickingDirection);
 
             positionedRooms.Add(new PositionedRoom(newX, newY));
@@ -171,7 +186,7 @@ public class Generate_World : MonoBehaviour {
 
         // Build a path to boss;
         //      Pass two: Give path directional rooms and create rooms on map
-        for(int i = 1; i < roomsToBoss - 1; i++) {
+        for(int i = 1; i < roomsToBoss - 1 && !failedGen; i++) {
 
             PositionedRoom previousRoom = positionedRooms[i - 1];
             PositionedRoom currentRoom = positionedRooms[i];
@@ -252,15 +267,20 @@ public class Generate_World : MonoBehaviour {
 
 
             // Pick from the remaining list of possible rooms and place
-            string roomSelection = filteredRooms[UnityEngine.Random.Range(0, filteredRooms.Count)];
-            newRoom = rooms[roomSelection];
-            Instantiate(newRoom.room, new Vector3(currentRoom.xPosition * 25, currentRoom.yPosition * 27, 0), Quaternion.identity, roomsParent);
-            PlacedRoom placedRoom = new PlacedRoom(currentRoom.xPosition, currentRoom.yPosition, newRoom.openings);
+            if(filteredRooms.Count == 0) {
+                failedGen = true;
+            }
+            if(!failedGen) {
+                string roomSelection = filteredRooms[UnityEngine.Random.Range(0, filteredRooms.Count)];
+                newRoom = rooms[roomSelection];
+                Instantiate(newRoom.room, new Vector3(currentRoom.xPosition * 25, currentRoom.yPosition * 27, 0), Quaternion.identity, roomsParent);
+                PlacedRoom placedRoom = new PlacedRoom(currentRoom.xPosition, currentRoom.yPosition, newRoom.openings);
 
-            placedRoom.openings[nextRoomDir] = false;
-            placedRoom.openings[prevRoomDir] = false;
-            
-            placedRooms.Add(placedRoom);
+                placedRoom.openings[nextRoomDir] = false;
+                placedRoom.openings[prevRoomDir] = false;
+                
+                placedRooms.Add(placedRoom);
+            }
 
             yield return null;
         }
@@ -327,12 +347,16 @@ public class Generate_World : MonoBehaviour {
             }
         }
 
-        if(!bossRoomObstructed) {
+        if(!bossRoomObstructed && !failedGen) {
             decorateRooms();
             loadingScreen.alpha = 0;
             GameObject.Find("HUD/LoadingNewFloor").GetComponent<CanvasGroup>().alpha = 0;
             GameObject.Find("Player").GetComponent<MovementScript>().canMove = true;
             GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = true;
+        }
+
+        if(failedGen) {
+            Generate();
         }
 
         yield return null;

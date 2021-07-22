@@ -13,6 +13,8 @@ public class RoomHandler : MonoBehaviour {
     private Sprite[] doorSprites;
     private Sprite[] vertSprites;
 
+    private int floorNum = 0;
+
     GameObject[] enemySets;
 
     Coroutine closeDoor;
@@ -21,7 +23,13 @@ public class RoomHandler : MonoBehaviour {
         doorSprites = Resources.LoadAll<Sprite>("Sprites/Door");
         vertSprites = Resources.LoadAll<Sprite>("Sprites/DoorVertical");
 
-        enemySets = Resources.LoadAll<GameObject>("Prefabs/EnemySets");
+        floorNum = GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber;
+
+        if(floorNum < 2) {
+            enemySets = Resources.LoadAll<GameObject>("Prefabs/EnemySets/Floor" + floorNum);
+        } else {
+            enemySets = Resources.LoadAll<GameObject>("Prefabs/EnemySets/Floor1");
+        }
     }
 
     public void onEnter() {
