@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MovementScript : MonoBehaviour {
    
@@ -8,6 +9,8 @@ public class MovementScript : MonoBehaviour {
     public int playerDirection = 0;
     public bool attacking = false;
     public bool canMove = true;
+
+    public int amntKeys = 0;
 
     private int walkStage = 1;
     private float walkTimer = 0.0f;
@@ -17,6 +20,7 @@ public class MovementScript : MonoBehaviour {
     private Camera camera;
     private SpriteRenderer playerSprite;
     private Sprite[] playerSpriteList;
+    private Text amntKeysText;
 
     public bool cameraLocked = true;
 
@@ -25,6 +29,8 @@ public class MovementScript : MonoBehaviour {
         camera = GameObject.FindGameObjectsWithTag("MainCamera")[0].GetComponent<Camera>();
         playerSprite = GetComponent<SpriteRenderer>();
         playerSpriteList = Resources.LoadAll<Sprite>("Sprites/Player");
+
+        amntKeysText = GameObject.Find("HUD/Panel/Keys/KeysAmount").GetComponent<Text>();
     }
 
 
@@ -91,6 +97,7 @@ public class MovementScript : MonoBehaviour {
             }
         }
 
+        amntKeysText.text = "x " + amntKeys;
     }
 
 }

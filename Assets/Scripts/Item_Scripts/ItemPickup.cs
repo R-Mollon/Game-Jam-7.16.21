@@ -28,6 +28,10 @@ public class ItemPickup : MonoBehaviour {
                     pickedUp = true;
                 }
                 break;
+            case "Key":
+                moveScript.amntKeys++;
+                pickedUp = true;
+                break;
             case "Speed":
                 moveScript.playerSpeed += 1.0f;
                 pickedUp = true;
@@ -73,6 +77,14 @@ public class ItemPickup : MonoBehaviour {
                 playerDamage.damage += 1.0f;
                 pickedUp = true;
                 break;
+        }
+
+        // Enforce caps on things that need to be capped
+        if(weaponScript.maxAttackCool < 0.1f) {
+            weaponScript.maxAttackCool = 0.1f;
+        }
+        if(damageScript.maxHealth > 18) {
+            damageScript.maxHealth = 18;
         }
 
         if(pickedUp) {

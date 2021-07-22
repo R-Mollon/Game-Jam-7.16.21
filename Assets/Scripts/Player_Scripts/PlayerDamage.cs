@@ -18,6 +18,8 @@ public class PlayerDamage : MonoBehaviour {
     private Image[] heartSpritesImages;
     private Image screenPanel;
 
+    private AudioSource damageSound;
+
     void Start() {
 
         heartSprites = Resources.LoadAll<Sprite>("Sprites/Hearts");
@@ -36,6 +38,8 @@ public class PlayerDamage : MonoBehaviour {
         };
 
         screenPanel = GameObject.Find("HUD/Panel").GetComponent<Image>();
+
+        damageSound = GetComponent<AudioSource>();
 
         // Initialize hearts
         maxHealth = previousMaxHealth;
@@ -130,6 +134,7 @@ public class PlayerDamage : MonoBehaviour {
     public void onDamage(int damage) {
         playerHealth -= damage;
         damageTime = maxDmgTime;
+        damageSound.Play();
     }
 
 

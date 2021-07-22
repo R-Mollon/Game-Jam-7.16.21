@@ -51,7 +51,7 @@ public class WeaponHandler : MonoBehaviour {
     void Update() {
         // Unity seems to dislike doing this async
         if(Input.GetMouseButton(0)) {
-            if(attackCooldown <= 0) {
+            if(attackCooldown <= 0 && canAttack) {
                 doAttack();
                 attackCooldown = maxAttackCool;
             }
@@ -86,23 +86,23 @@ public class WeaponHandler : MonoBehaviour {
     IEnumerator showAttack() {
         float time = 0f;
 
+        // Face player towards swing
+        if(lastAngle >= -45.0f && lastAngle <= 45.0f) {
+            // Swinging up
+            moveScript.playerDirection = 2;
+        } else if(lastAngle >= -135.0f && lastAngle <= -45.0f) {
+            // Swinging right
+            moveScript.playerDirection = 1;
+        } else if(lastAngle >= 45.0f && lastAngle <= 135.0f) {
+            // Swinging left
+            moveScript.playerDirection = 3;
+        } else {
+            // Swinging down
+            moveScript.playerDirection = 0;
+        }
+
         while(time < swingPersist) {
             time += Time.deltaTime;
-
-            // Face player towards swing
-            if(lastAngle >= -45.0f && lastAngle <= 45.0f) {
-                // Swinging up
-                moveScript.playerDirection = 2;
-            } else if(lastAngle >= -135.0f && lastAngle <= -45.0f) {
-                // Swinging right
-                moveScript.playerDirection = 1;
-            } else if(lastAngle >= 45.0f && lastAngle <= 135.0f) {
-                // Swinging left
-                moveScript.playerDirection = 3;
-            } else {
-                // Swinging down
-                moveScript.playerDirection = 0;
-            }
 
             int animFrame = (int) Mathf.Clamp(((time / swingPersist) * 5), 0, 5);
             swingSprite.sprite = swingSprites[animFrame];

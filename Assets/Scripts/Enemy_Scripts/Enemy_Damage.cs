@@ -8,7 +8,7 @@ public class Enemy_Damage : MonoBehaviour {
     public float health = 1.0f;
 
     private float damageTime = 0.0f;
-    private float maxDmgTime = 0.5f;
+    private float maxDmgTime = 0.2f;
     
     private SpriteRenderer spriteRenderer;
     
@@ -46,7 +46,7 @@ public class Enemy_Damage : MonoBehaviour {
         if(damageTime > 0.0f) {
             damageTime -= Time.deltaTime;
 
-            spriteRenderer.color = new Color(1, (255 - (damageTime * 400)) / 255f, (255 - (damageTime * 400)) / 255f, 1f);
+            spriteRenderer.color = new Color(1, (255 - (damageTime * 1000)) / 255f, (255 - (damageTime * 1000)) / 255f, 1f);
         }
 
         if(damageTime <= 0.0f) {

@@ -13,6 +13,9 @@ public class BossHandler : MonoBehaviour {
 
     private MovementScript moveScript;
 
+    private AudioSource worldMusic;
+    private AudioSource bossMusic;
+
     private bool started = false;
 
     void Start() {
@@ -20,6 +23,9 @@ public class BossHandler : MonoBehaviour {
         bossName = GameObject.Find("HUD/Panel/BossBar/Name").GetComponent<Text>();
         bossBar = GameObject.Find("HUD/Panel/BossBar/BarGreen").GetComponent<Image>();
         mainCamera = GameObject.Find("Main Camera");
+
+        worldMusic = GameObject.Find("Music").GetComponent<AudioSource>();
+        bossMusic = GameObject.Find("BossMusic").GetComponent<AudioSource>();
     }
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -45,8 +51,21 @@ public class BossHandler : MonoBehaviour {
 
         float timer = 11.75f;
 
+        float worldStartVolume = worldMusic.volume;
+        bool musicSwitched = false;
+
         while(true) {
             timer -= Time.deltaTime;
+
+            if(!musicSwitched) {
+                if(worldMusic.volume > 0.0f) {
+                    worldMusic.volume -= worldStartVolume * Time.deltaTime * 2;
+                } else {
+                    worldMusic.Stop();
+                    bossMusic.Play();
+                    musicSwitched = true;
+                }
+            }
 
             mainCamera.transform.position = Vector2.MoveTowards(mainCamera.transform.position, spawnSpot.position, Time.deltaTime * 30.0f);
             mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -1);

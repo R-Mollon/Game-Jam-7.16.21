@@ -30,6 +30,13 @@ public class RoomHandler : MonoBehaviour {
 
         roomEntered = true;
 
+        // 1 in 10 chance to be a chest room instead of having enemies
+        int roomType = Random.Range(0, 10);
+        if(roomType == 7) {
+            Instantiate(Resources.Load<GameObject>("prefabs/Chest"), transform.position, Quaternion.identity);
+            return;
+        }
+
         for(int i = 0; i < doors.Length; i++) {
             doors[i].GetComponent<Collider2D>().enabled = true;
         }
@@ -48,7 +55,7 @@ public class RoomHandler : MonoBehaviour {
             return;
         }
 
-        if(transform.Find("Enemies").GetChild(0).childCount == 0) {
+        if(transform.Find("Enemies").GetChild(0).childCount == 0 && !roomCompleted) {
             // All enemies killed
 
             StopCoroutine(closeDoor);
@@ -60,6 +67,13 @@ public class RoomHandler : MonoBehaviour {
             }
 
             StartCoroutine("DoorOpenAnimation");
+
+            // Spawn item
+            GameObject spawnManager = GameObject.Find("ItemSpawnManager");
+            GameObject itemToSpawn = spawnManager.GetComponent<ItemSpawnManager>().genRandomRoomReward();
+
+            Instantiate(itemToSpawn, transform.position, Quaternion.identity, spawnManager.transform);
+
         }
     }
 

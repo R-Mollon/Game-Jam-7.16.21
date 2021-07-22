@@ -32,6 +32,39 @@ TextureImporter:
   - first:
       213: 1391368052908442165
     second: Pickups_9
+  - first:
+      213: 8262524383253715028
+    second: Pickups_0
+  - first:
+      213: 1576733312180240090
+    second: Pickups_1
+  - first:
+      213: 7301097313257791527
+    second: Pickups_2
+  - first:
+      213: 7979507344527911289
+    second: Pickups_3
+  - first:
+      213: 7424375845797961051
+    second: Pickups_4
+  - first:
+      213: -8458086156888356278
+    second: Pickups_5
+  - first:
+      213: -1555545142796312942
+    second: Pickups_6
+  - first:
+      213: 6953281206646272918
+    second: Pickups_7
+  - first:
+      213: -8064713862437017920
+    second: Pickups_8
+  - first:
+      213: -2826052891696588439
+    second: Pickups_9
+  - first:
+      213: 1861386955807250875
+    second: Pickups_10
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -143,8 +176,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 287f18a794cd9f900800000000000000
-      internalID: 718847823688365954
+      spriteID: 45857db56226aa270800000000000000
+      internalID: 8262524383253715028
       vertices: []
       indices: 
       edges: []
@@ -164,8 +197,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8d71a9b8efee51ec0800000000000000
-      internalID: -3596705950354237480
+      spriteID: ade3702f79ea1e510800000000000000
+      internalID: 1576733312180240090
       vertices: []
       indices: 
       edges: []
@@ -185,8 +218,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6d73172ddab65500800000000000000
-      internalID: 384700277192883564
+      spriteID: 7202a43d255b25560800000000000000
+      internalID: 7301097313257791527
       vertices: []
       indices: 
       edges: []
@@ -206,8 +239,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae9654952f566f110800000000000000
-      internalID: 1294334034469808618
+      spriteID: 979e43117a7ecbe60800000000000000
+      internalID: 7979507344527911289
       vertices: []
       indices: 
       edges: []
@@ -227,8 +260,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cccc45ab012884a50800000000000000
-      internalID: 6505592670093888716
+      spriteID: b5d17c7ee7ea80760800000000000000
+      internalID: 7424375845797961051
       vertices: []
       indices: 
       edges: []
@@ -248,8 +281,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71798835c279428e0800000000000000
-      internalID: -1719082941112871145
+      spriteID: a4a45030477de9a80800000000000000
+      internalID: -8458086156888356278
       vertices: []
       indices: 
       edges: []
@@ -269,8 +302,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e242b6386d00f0050800000000000000
-      internalID: 5768830569012732974
+      spriteID: 29e9a8b2fe7996ae0800000000000000
+      internalID: -1555545142796312942
       vertices: []
       indices: 
       edges: []
@@ -290,8 +323,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b150348e20894090800000000000000
-      internalID: -8049761921673440841
+      spriteID: 693fc89da640f7060800000000000000
+      internalID: 6953281206646272918
       vertices: []
       indices: 
       edges: []
@@ -311,8 +344,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e7088c77f81c6330800000000000000
-      internalID: 3705364044644354023
+      spriteID: 0c6e5468871641090800000000000000
+      internalID: -8064713862437017920
       vertices: []
       indices: 
       edges: []
@@ -332,8 +365,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5324f615fd12f4310800000000000000
-      internalID: 1391368052908442165
+      spriteID: 96995f93ed7d7c8d0800000000000000
+      internalID: -2826052891696588439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pickups_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb9df620399f4d910800000000000000
+      internalID: 1861386955807250875
       vertices: []
       indices: 
       edges: []

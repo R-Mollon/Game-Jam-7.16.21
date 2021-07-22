@@ -67,6 +67,11 @@ public class Generate_World : MonoBehaviour {
         listOfRooms.AddRange(roomList);
 
 
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+        Time.timeScale = 0.75f;
+
+
         StartCoroutine("BuildWorld");
 
     }
@@ -322,6 +327,8 @@ public class Generate_World : MonoBehaviour {
         if(!bossRoomObstructed) {
             decorateRooms();
             loadingScreen.alpha = 0;
+            GameObject.Find("Player").GetComponent<MovementScript>().canMove = true;
+            GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = true;
         }
 
         yield return null;

@@ -33,9 +33,7 @@ public class ItemCollection : MonoBehaviour {
         while(timer < maxTimer) {
             timer += Time.deltaTime;
 
-            if(timer > 4.0f) {
-                render.alpha = (maxTimer - timer) / maxTimer;
-            }
+            render.alpha = (maxTimer - timer) / maxTimer;
 
             yield return null;
         }
