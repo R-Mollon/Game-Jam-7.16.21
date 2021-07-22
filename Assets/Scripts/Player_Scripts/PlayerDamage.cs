@@ -119,6 +119,12 @@ public class PlayerDamage : MonoBehaviour {
             }
         }
 
+        if(collider.tag == "ItemPickup") {
+            ItemPickup item = collider.GetComponent<ItemPickup>();
+
+            item.pickup();
+        }
+
     }
 
     public void onDamage(int damage) {

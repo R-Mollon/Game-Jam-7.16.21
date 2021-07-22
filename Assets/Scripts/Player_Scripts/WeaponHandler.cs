@@ -8,7 +8,7 @@ public class WeaponHandler : MonoBehaviour {
 	
 	
 	private float attackCooldown = 0.0f;
-	private float maxAttackCool  = 1.0f;
+	public float maxAttackCool  = 1.0f;
     private float swingPersist = 0.1f;
     private float lastAngle = 0.0f;
 
@@ -20,12 +20,16 @@ public class WeaponHandler : MonoBehaviour {
 
     private Sprite[] swingSprites;
 
+    private AudioSource swingSound;
+
     void Start() {
         swingTransform = GameObject.Find("Player/SwingContainer").GetComponent<Transform>();
         swingCollider = GameObject.Find("Player/SwingContainer/SwingZone").GetComponent<PolygonCollider2D>();
         swingSprite = GameObject.Find("Player/SwingContainer/SwingZone/SwingSprite").GetComponent<SpriteRenderer>();
 
         swingSprites = Resources.LoadAll<Sprite>("Sprites/SwingAnimation");
+
+        swingSound = GameObject.Find("Player/SwingContainer/SwingZone").GetComponent<AudioSource>();
 
         moveScript = gameObject.GetComponent<MovementScript>();
     }
@@ -46,9 +50,11 @@ public class WeaponHandler : MonoBehaviour {
 
     void Update() {
         // Unity seems to dislike doing this async
-        if(Input.GetMouseButtonDown(0) && attackCooldown <= 0) {
-            doAttack();
-            attackCooldown = maxAttackCool;
+        if(Input.GetMouseButton(0)) {
+            if(attackCooldown <= 0) {
+                doAttack();
+                attackCooldown = maxAttackCool;
+            }
         }
     }
 
@@ -70,6 +76,8 @@ public class WeaponHandler : MonoBehaviour {
         swingSprite.enabled = true;
 
         moveScript.attacking = true;
+
+        swingSound.Play();
 
         StartCoroutine("showAttack");
 		
