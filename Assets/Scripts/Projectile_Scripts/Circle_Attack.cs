@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Circle_Attack : MonoBehaviour {
 
-    public float angle = 0.0f;
+    public Vector3 angle;
     private float speed = 8.0f;
 
     private float lifetime = 0.0f;
-    public float maxLifetime = 80.0f;
+    public float maxLifetime = 8.0f;
 
     private bool doMovement = false;
     private bool started = false;
@@ -24,10 +24,6 @@ public class Circle_Attack : MonoBehaviour {
         pentagramRenderer = pentagram.gameObject.GetComponent<SpriteRenderer>();
 
         rigidBody = GetComponent<Rigidbody2D>();
-
-        transform.Rotate(0, 0, angle);
-        rotater.Rotate(0, 0, -angle);
-        pentagram.Rotate(0, 0, -angle);
 
         started = true;
     }
@@ -65,8 +61,9 @@ public class Circle_Attack : MonoBehaviour {
 
         while(true) {
             rotater.Rotate(0, 0, Time.deltaTime * 100.0f);
-            Vector2 upTransform = new Vector2(transform.up.x, transform.up.y);
-            rigidBody.MovePosition(rigidBody.position + (upTransform * speed * Time.deltaTime));
+            //Vector2 upTransform = new Vector2(transform.up.x, transform.up.y);
+            //rigidBody.MovePosition(rigidBody.position + (upTransform * speed * Time.deltaTime));
+            transform.position = transform.position + (angle * Time.deltaTime * speed);
 
             yield return null;
         }

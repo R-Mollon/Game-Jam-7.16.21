@@ -80,17 +80,13 @@ public class Enemy_Attack : MonoBehaviour {
         Vector3 enemyPosition = transform.position;
         Vector3 playerPosition = GameObject.Find("Player").transform.position;
 
-        float xDelta = enemyPosition.x - playerPosition.x;
-        float yDelta = playerPosition.y - enemyPosition.y;
-
-        float angleRadians = Mathf.Atan2(xDelta, yDelta);
-        float attackAngle = (360 / (Mathf.PI * 2)) * angleRadians;
+        Vector3 angle = Vector3.Normalize(playerPosition - enemyPosition);
 
         Circle_Attack attackScript = attack.GetComponent<Circle_Attack>();
 
         audio.Play();
 
-        attackScript.angle = attackAngle;
+        attackScript.angle = angle;
         attackScript.go();
 
     }
