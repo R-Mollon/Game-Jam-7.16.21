@@ -26,7 +26,7 @@ public class Generate_World : MonoBehaviour {
         rooms = new Dictionary<string, RoomDefinition>();
         positionedRooms = new List<PositionedRoom>();
         placedRooms = new List<PlacedRoom>();
-        roomsParent = GameObject.Find("World").transform;
+        roomsParent = transform;
 
         loadingScreen = GameObject.Find("HUD/Loading").GetComponent<CanvasGroup>();
         loadingScreen.alpha = 1;

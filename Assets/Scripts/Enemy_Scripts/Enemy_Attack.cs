@@ -10,6 +10,8 @@ public class Enemy_Attack : MonoBehaviour {
     private SpriteRenderer enemySprite;
     private Sprite[] spriteList;
 
+    private AudioSource audio;
+
     private bool attacking = false;
     private int attackStage = 0;
     private float attackTime = 0.0f;
@@ -21,13 +23,15 @@ public class Enemy_Attack : MonoBehaviour {
         enemySprite = GetComponent<SpriteRenderer>();
         spriteList = Resources.LoadAll<Sprite>("Sprites/Cultist");
 
+        audio = GetComponent<AudioSource>();
+
         StartCoroutine("Attack");
     }
 
 
     IEnumerator Attack() {
 
-        float cooldown = 0f;
+        float cooldown = 1.0f;
 
         while(true) {
 
@@ -83,6 +87,8 @@ public class Enemy_Attack : MonoBehaviour {
         float attackAngle = (360 / (Mathf.PI * 2)) * angleRadians;
 
         Circle_Attack attackScript = attack.GetComponent<Circle_Attack>();
+
+        audio.Play();
 
         attackScript.angle = attackAngle;
         attackScript.go();

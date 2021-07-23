@@ -99,7 +99,9 @@ public class BigGreenGhost : MonoBehaviour {
 
         yield return new WaitForSeconds(0.15f);
 
-        Instantiate(Resources.Load<GameObject>("Prefabs/Items/GreenSludgeItem"), transform.position - transform.up, Quaternion.identity);
+        Transform itemSpawnParent = GameObject.Find("ItemSpawnManager").transform;
+
+        Instantiate(Resources.Load<GameObject>("Prefabs/Items/GreenSludgeItem"), transform.position - transform.up, Quaternion.identity, itemSpawnParent);
 
         // Spawn next floor portal
         Transform playerTransform = GameObject.Find("Player").transform;

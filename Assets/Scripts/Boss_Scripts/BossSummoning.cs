@@ -57,7 +57,7 @@ public class BossSummoning : MonoBehaviour {
 
         Instantiate(bosses[0], transform.position + new Vector3(0, 1.7f, 0), Quaternion.identity);
 
-        while(true) {
+        while(globalTimer > -2.0f) {
             cultistsTimer += Time.deltaTime;
             globalTimer -= Time.deltaTime;
 
@@ -82,6 +82,10 @@ public class BossSummoning : MonoBehaviour {
 
             yield return null;
         }
+
+        Destroy(gameObject);
+
+        yield return null;
     }
 
 }
