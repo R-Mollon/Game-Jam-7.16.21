@@ -66,6 +66,7 @@ public class Generate_World : MonoBehaviour {
         };
         listOfRooms.AddRange(roomList);
 
+        AudioListener.volume = 1.0f;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
 

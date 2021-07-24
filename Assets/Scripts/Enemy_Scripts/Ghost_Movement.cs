@@ -23,7 +23,7 @@ public class Ghost_Movement : MonoBehaviour {
     private float maxDmgCooldown = 0.2f;
 
     private float health = 1.0f;
-    private float maxHealth = 15.0f;
+    private float maxHealth = 10.0f;
     
     private GameObject player;
 
@@ -149,7 +149,7 @@ public class Ghost_Movement : MonoBehaviour {
 
             teleport = true;
             damageCooldown = maxDmgCooldown;
-            health -= other.GetComponent<Damage_Storage>().damage;
+            health -= (other.GetComponent<Damage_Storage>().damage * other.GetComponent<Damage_Storage>().damageMultiplier);
 
             if(health <= 0) {
                 Destroy(gameObject);

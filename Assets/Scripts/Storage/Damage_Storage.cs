@@ -5,5 +5,6 @@ using UnityEngine;
 public class Damage_Storage : MonoBehaviour {
 	
 	public float damage;
+	public float damageMultiplier;
 	
 }

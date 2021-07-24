@@ -17,6 +17,7 @@ public class CultistBoss : MonoBehaviour {
     private LineRenderer lineRenderer;
 
     private bool attacking = false;
+    private bool invulnerable = true;
 
     private int randomSprite = 0;
 
@@ -40,7 +41,57 @@ public class CultistBoss : MonoBehaviour {
 
         greenProjectile = Resources.Load<GameObject>("Prefabs/GreenCultistProjectile");
 
+        StartCoroutine("Spawn");
+    }
+
+    
+    IEnumerator Spawn() {
+        float timer = 0.0f;
+
+        while(timer <= 6.5f) {
+            timer += Time.deltaTime;
+
+            spriteRenderer.color = new Color(1, 1, 1, Mathf.Clamp(timer / 6.5f, 0, 1));
+            yield return null;
+        }
+
+        invulnerable = false;
+
         StartCoroutine("Attack");
+
+        yield return null;
+    }
+
+
+    IEnumerator Death() {
+        float timer = 6.5f;
+
+        invulnerable = true;
+
+        while(timer > 0.0f) {
+            timer -= Time.deltaTime;
+
+            spriteRenderer.color = new Color(1, 1, 1, Mathf.Clamp(timer / 6.5f, 0, 1));
+            yield return null;
+        }
+
+        GameObject.Find("BossMusic").GetComponent<AudioSource>().Stop();
+
+        Transform itemSpawnParent = GameObject.Find("ItemSpawnManager").transform;
+
+        Instantiate(Resources.Load<GameObject>("Prefabs/Items/ChaliceItem"), transform.position - transform.up, Quaternion.identity, itemSpawnParent);
+
+        // Spawn next floor portal
+        Transform playerTransform = GameObject.Find("Player").transform;
+        if(playerTransform.position.y > transform.position.y) {
+            Instantiate(Resources.Load<GameObject>("Prefabs/NextFloorPortal"), transform.position - (transform.up * 4), Quaternion.identity);
+        } else {
+            Instantiate(Resources.Load<GameObject>("Prefabs/NextFloorPortal"), transform.position + (transform.up * 3), Quaternion.identity);
+        }
+
+        Destroy(gameObject);
+
+        yield return null;
     }
 
 
@@ -54,16 +105,21 @@ public class CultistBoss : MonoBehaviour {
 
 
     void OnTriggerEnter2D(Collider2D other) {
-        if(other.tag == "PlayerAttack" && dmgCool <= 0.0f) {
-            health -= other.GetComponent<Damage_Storage>().damage;
+        if(other.tag == "PlayerAttack" && dmgCool <= 0.0f && !invulnerable) {
+            health -= (other.GetComponent<Damage_Storage>().damage * other.GetComponent<Damage_Storage>().damageMultiplier);
             dmgCool = maxDmgCool;
+
+            if(health <= 0.0f) {
+                StopAllCoroutines();
+                StartCoroutine("Death");
+            }
         }
     }
 
 
     IEnumerator Attack() {
-        float atkTimer = Random.Range(0, 5);
-        float maxAtkTimer = 5.0f;
+        float atkTimer = 1.0f;
+        float maxAtkTimer = 2.0f;
 
         while(true) {
             atkTimer -= Time.deltaTime;
@@ -131,8 +187,6 @@ public class CultistBoss : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(1.0f);
-
-        randomSprite = 2;
 
         if(randomSprite == 0) {
             // Red cultist attack
@@ -232,9 +286,16 @@ public class CultistBoss : MonoBehaviour {
                     int greenProjectileCount = 0;
                     greenTimer = 0.0f;
 
-                    Vector3 angle1 = Vector3.Normalize((playerTransform.position + playerTransform.up - playerTransform.right) - transform.position);
-                    Vector3 angle2 = Vector3.Normalize((playerTransform.position) - transform.position);
-                    Vector3 angle3 = Vector3.Normalize((playerTransform.position - playerTransform.up + playerTransform.right) - transform.position);
+                    lineRenderer.SetPosition(0, transform.position);
+                    lineRenderer.SetPosition(1, transform.position);
+
+                    Vector3 angle1 = Vector3.Normalize((playerTransform.position) - transform.position);
+                    float angle1Radians = Mathf.Atan2(angle1.y, angle1.x);
+                    float angle2Radians = angle1Radians + (Mathf.PI / 4);
+                    float angle3Radians = angle1Radians - (Mathf.PI / 4);
+
+                    Vector3 angle2 = Vector3.Normalize(new Vector3(angle1.x + Mathf.Cos(angle2Radians), angle1.y + Mathf.Sin(angle2Radians), -1));
+                    Vector3 angle3 = Vector3.Normalize(new Vector3(angle1.x + Mathf.Cos(angle3Radians), angle1.y + Mathf.Sin(angle3Radians), -1));
 
                     while(greenProjectileCount < 5) {
 
@@ -259,9 +320,6 @@ public class CultistBoss : MonoBehaviour {
                         greenProjectileCount++;
                         yield return new WaitForSeconds(0.05f);
                     }
-
-                    lineRenderer.SetPosition(0, transform.position);
-                    lineRenderer.SetPosition(1, transform.position);
 
                     greenAttackCount++;
                     yield return new WaitForSeconds(0.5f);

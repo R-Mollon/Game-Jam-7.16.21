@@ -19,6 +19,8 @@ public class BossHandler : MonoBehaviour {
 
     private bool started = false;
 
+    private int bossID;
+
     void Start() {
         showBar = GameObject.Find("HUD/Panel/BossBar").GetComponent<CanvasGroup>();
         bossName = GameObject.Find("HUD/Panel/BossBar/Name").GetComponent<Text>();
@@ -45,6 +47,8 @@ public class BossHandler : MonoBehaviour {
         moveScript.canMove = false;
         attackScript.canAttack = false;
         moveScript.cameraLocked = false;
+
+        bossID = GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber;
 
         Transform spawnSpot = GameObject.Find("Room-Middle").transform;
 
@@ -93,15 +97,33 @@ public class BossHandler : MonoBehaviour {
 
     IEnumerator ShowHealth() {
 
-        BigGreenGhost ghostBoss = GameObject.FindGameObjectsWithTag("BigGreenGhost")[0].GetComponent<BigGreenGhost>();
+        float bossMaxHealth = 0.0f;
+
+        if(bossID == 0) {
+            BigGreenGhost boss = GameObject.FindGameObjectsWithTag("BigGreenGhost")[0].GetComponent<BigGreenGhost>();
+            bossMaxHealth = boss.maxHealth;
+        } else if(bossID == 1) {
+            CultistBoss boss = GameObject.FindGameObjectsWithTag("CultistBoss")[0].GetComponent<CultistBoss>();
+            bossMaxHealth = boss.maxHealth;
+        }
 
         while(true) {
-            float healthPercentage = ghostBoss.health / ghostBoss.maxHealth;
+            float bossHealth = 0.0f;
+
+            if(bossID == 0) {
+                BigGreenGhost boss = GameObject.FindGameObjectsWithTag("BigGreenGhost")[0].GetComponent<BigGreenGhost>();
+                bossHealth = boss.health;
+            } else if(bossID == 1) {
+                CultistBoss boss = GameObject.FindGameObjectsWithTag("CultistBoss")[0].GetComponent<CultistBoss>();
+                bossHealth = boss.health;
+            }
+
+            float healthPercentage = bossHealth / bossMaxHealth;
 
             bossBar.rectTransform.sizeDelta = new Vector2(395f * healthPercentage, 15);
             bossBar.rectTransform.localPosition = new Vector3((395f - (395f * healthPercentage)) / -2, -196, 0);
 
-            if(ghostBoss.health <= 0) {
+            if(bossHealth <= 0) {
                 break;
             }
 
@@ -118,8 +140,13 @@ public class BossHandler : MonoBehaviour {
     IEnumerator FillBar() {
         float timer = 0.0f;
 
-        bossName.text = "Nightmare Ghost";
-        showBar.alpha = 1;
+        if(bossID == 0) {
+            bossName.text = "Nightmare Ghost";
+            showBar.alpha = 1;
+        } else if(bossID == 1) {
+            bossName.text = "Cultist Lord";
+            showBar.alpha = 1;
+        }
 
         while(true) {
             timer += Time.deltaTime;

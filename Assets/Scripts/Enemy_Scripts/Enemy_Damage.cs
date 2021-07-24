@@ -16,7 +16,7 @@ public class Enemy_Damage : MonoBehaviour {
 
         if(collider.tag == "PlayerAttack") {
             if(damageTime <= 0.0f) {
-                health -= collider.gameObject.GetComponent<Damage_Storage>().damage;
+                health -= (collider.gameObject.GetComponent<Damage_Storage>().damage * collider.GetComponent<Damage_Storage>().damageMultiplier);
 
                 damageTime = maxDmgTime;
 

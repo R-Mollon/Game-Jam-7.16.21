@@ -94,7 +94,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -125,4 +125,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a91dee5479db44a957aed6aceffdbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angle: 0
+  angle: {x: 0, y: 0, z: 0}

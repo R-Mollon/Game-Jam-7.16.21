@@ -50,7 +50,7 @@ public class WeaponHandler : MonoBehaviour {
 
     void Update() {
         // Unity seems to dislike doing this async
-        if(Input.GetMouseButton(0)) {
+        if(Input.GetMouseButton(0) && !moveScript.paused) {
             if(attackCooldown <= 0 && canAttack) {
                 doAttack();
                 attackCooldown = maxAttackCool;

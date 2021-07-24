@@ -6,7 +6,7 @@ public class GreenCultistProjectile : MonoBehaviour {
     
     public Vector3 angle;
 
-    private float speed = 8.0f;
+    private float speed = 12.0f;
 
     private bool started = false;
 

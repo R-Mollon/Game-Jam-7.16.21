@@ -22,6 +22,20 @@ public class ItemSpawnManager : MonoBehaviour {
     }
 
 
+    public void resetItems() {
+        collectedItems["BroadSword"] = false;
+        collectedItems["Chalice"] = false;
+        collectedItems["CrystalHeart"] = false;
+        collectedItems["Dumbbell"] = false;
+        collectedItems["EnchantedSword"] = false;
+        collectedItems["Feather"] = false;
+        collectedItems["GreenSludge"] = false;
+        collectedItems["Medkit"] = false;
+        collectedItems["Pill"] = false;
+        collectedItems["Shoes"] = false;
+    }
+
+
     public GameObject genRandomRoomReward() {
 
         int randomSelection = Random.Range(0, 1000);

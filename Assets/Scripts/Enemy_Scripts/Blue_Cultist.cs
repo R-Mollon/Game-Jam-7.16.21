@@ -25,7 +25,7 @@ public class Blue_Cultist : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "PlayerAttack" && dmgCool <= 0.0f) {
-            health -= other.GetComponent<Damage_Storage>().damage;
+            health -= (other.GetComponent<Damage_Storage>().damage * other.GetComponent<Damage_Storage>().damageMultiplier);
             dmgCool = maxDmgCool;
 
             if(health <= 0) {

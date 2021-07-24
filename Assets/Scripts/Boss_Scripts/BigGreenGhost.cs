@@ -159,7 +159,7 @@ public class BigGreenGhost : MonoBehaviour {
         if(other.tag == "PlayerAttack" && invulnerability <= 0.0f) {
             Damage_Storage damage = other.GetComponent<Damage_Storage>();
 
-            health -= damage.damage;
+            health -= (damage.damage * damage.damageMultiplier);
             invulnerability = 0.1f;
 
         }

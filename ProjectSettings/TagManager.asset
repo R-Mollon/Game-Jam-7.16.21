@@ -11,6 +11,7 @@ TagManager:
   - BigGreenGhost
   - Ghost
   - ItemPickup
+  - CultistBoss
   layers:
   - Default
   - TransparentFX

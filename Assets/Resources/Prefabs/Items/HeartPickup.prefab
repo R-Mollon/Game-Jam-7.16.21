@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: Heart
   itemName: Full Heart
-  itemDesc: You feel better already
+  itemDesc: You feel better
 --- !u!114 &5019868907356276784
 MonoBehaviour:
   m_ObjectHideFlags: 0

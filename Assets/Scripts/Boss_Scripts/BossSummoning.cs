@@ -30,6 +30,8 @@ public class BossSummoning : MonoBehaviour {
         float cultistsTimer = 0.0f;
         float globalTimer = 0.0f;
 
+        int bossID = GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber;
+
         while(true) {
             cultistsTimer += Time.deltaTime;
             globalTimer += Time.deltaTime;
@@ -55,7 +57,7 @@ public class BossSummoning : MonoBehaviour {
             yield return null;
         }
 
-        Instantiate(bosses[0], transform.position + new Vector3(0, 1.7f, 0), Quaternion.identity);
+        Instantiate(bosses[bossID], transform.position + new Vector3(0, 1.7f, 0), Quaternion.identity);
 
         while(globalTimer > -2.0f) {
             cultistsTimer += Time.deltaTime;

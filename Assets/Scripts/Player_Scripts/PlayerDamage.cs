@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerDamage : MonoBehaviour {
     
@@ -19,6 +20,8 @@ public class PlayerDamage : MonoBehaviour {
     private Image screenPanel;
 
     private AudioSource damageSound;
+
+    private bool dead = false;
 
     void Start() {
 
@@ -132,9 +135,48 @@ public class PlayerDamage : MonoBehaviour {
     }
 
     public void onDamage(int damage) {
-        playerHealth -= damage;
-        damageTime = maxDmgTime;
-        damageSound.Play();
+        
+        if(playerHealth > 0) {
+            playerHealth -= damage;
+            damageTime = maxDmgTime;
+            damageSound.Play();
+        }
+
+        if(playerHealth <= 0 && !dead) {
+            dead = true;
+            
+            onDeath();
+        }
+    }
+
+
+    void onDeath() {
+        GameObject.Find("Player").GetComponent<MovementScript>().canMove = false;
+        GameObject.Find("Player").GetComponent<WeaponHandler>().canAttack = false;
+
+        AudioListener.volume = 0;
+
+        StartCoroutine("DeathFade");
+    }
+
+    IEnumerator DeathFade() {
+        CanvasGroup deathText = GameObject.Find("HUD/Death/DeathText").GetComponent<CanvasGroup>();
+        CanvasGroup deathPanel = GameObject.Find("HUD/Death").GetComponent<CanvasGroup>();
+
+        for(int i = 0; i < 100; i++) {
+            deathPanel.alpha = i / 100f;
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        yield return new WaitForSeconds(4.0f);
+
+        for(int i = 1; i < 100; i++) {
+            deathText.alpha = 100f / i;
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        SceneManager.LoadScene(0);
+        yield return null;
     }
 
 

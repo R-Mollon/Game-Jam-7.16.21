@@ -23,6 +23,15 @@ public class NextFloorPortal : MonoBehaviour {
 
         generated = true;
 
+        if(GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber >= 1) {
+            // No more floors
+            GameObject.Find("HUD/GameEnd").GetComponent<CanvasGroup>().alpha = 1;
+            GameObject.Find("HUD/GameEnd/Power").SetActive(true);
+            GameObject.Find("HUD/GameEnd/Accept").SetActive(true);
+
+            return;
+        }
+
         // Set player to next floor
         GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber++;
 
@@ -40,11 +49,6 @@ public class NextFloorPortal : MonoBehaviour {
         foreach(Transform child in GameObject.Find("ItemSpawnManager").transform) {
             Destroy(child.gameObject);
         }
-        
-        //Destroy(GameObject.Find("World"));
-        //GameObject world = Instantiate(Resources.Load<GameObject>("Prefabs/World"), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        //world.name = "World";
-        //world.GetComponent<Generate_World>().roomsToBoss += 5 * GameObject.Find("FloorStorage").GetComponent<Floor_Storage>().floorNumber;
 
         Destroy(gameObject);
 

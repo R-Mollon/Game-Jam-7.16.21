@@ -24,6 +24,8 @@ public class MovementScript : MonoBehaviour {
 
     public bool cameraLocked = true;
 
+    public bool paused = false;
+
     void Start() {
         rigidBody = GetComponent<Rigidbody2D>();
         camera = GameObject.FindGameObjectsWithTag("MainCamera")[0].GetComponent<Camera>();
@@ -66,6 +68,30 @@ public class MovementScript : MonoBehaviour {
             if(!attacking) {
                 playerDirection = 1;
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            if(paused) {
+                GameObject.Find("HUD/PauseMenu").GetComponent<CanvasGroup>().alpha = 0;
+                GameObject.Find("HUD/PauseMenu/Background/Return").SetActive(false);
+                GameObject.Find("HUD/PauseMenu/Background/Quit").SetActive(false);
+
+                Time.timeScale = 1.0f;
+
+                paused = false;
+            } else {
+                GameObject.Find("HUD/PauseMenu").GetComponent<CanvasGroup>().alpha = 1;
+                GameObject.Find("HUD/PauseMenu/Background/Return").SetActive(true);
+                GameObject.Find("HUD/PauseMenu/Background/Quit").SetActive(true);
+
+                Time.timeScale = 0.0f;
+
+                paused = true;
+            }
+        }
+
+        if(paused) {
+            return;
         }
 
         if(canMove) {
