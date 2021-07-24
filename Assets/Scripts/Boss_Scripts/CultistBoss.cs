@@ -64,14 +64,16 @@ public class CultistBoss : MonoBehaviour {
 
 
     IEnumerator Death() {
-        float timer = 6.5f;
+        float timer = 3.0f;
 
         invulnerable = true;
+
+        GetComponent<AudioSource>().Play();
 
         while(timer > 0.0f) {
             timer -= Time.deltaTime;
 
-            spriteRenderer.color = new Color(1, 1, 1, Mathf.Clamp(timer / 6.5f, 0, 1));
+            spriteRenderer.color = new Color(1, 1, 1, Mathf.Clamp(timer / 3.0f, 0, 1));
             yield return null;
         }
 
@@ -202,6 +204,8 @@ public class CultistBoss : MonoBehaviour {
 
             GameObject circleAttack = Resources.Load<GameObject>("Prefabs/CircleAttack");
 
+            GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>("Sounds/SFX/CultistCharge"), 0.5f);
+
             for(int i = 0; i < offsets.Length; i++) {
                 GameObject attack = Instantiate(circleAttack, transform.position + offsets[i], Quaternion.identity);
                 Circle_Attack attackScript =  attack.GetComponent<Circle_Attack>();
@@ -241,6 +245,8 @@ public class CultistBoss : MonoBehaviour {
 
                         Instantiate(bluePortal, playerTransform.position + randomPosVect3, Quaternion.identity);
                     }
+
+                    GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>("Sounds/SFX/BlueCultistShot"), 0.5f);
 
                     blueAttackCount++;
                     blueAttackTimer = 0.0f;
@@ -297,6 +303,8 @@ public class CultistBoss : MonoBehaviour {
                     Vector3 angle2 = Vector3.Normalize(new Vector3(angle1.x + Mathf.Cos(angle2Radians), angle1.y + Mathf.Sin(angle2Radians), -1));
                     Vector3 angle3 = Vector3.Normalize(new Vector3(angle1.x + Mathf.Cos(angle3Radians), angle1.y + Mathf.Sin(angle3Radians), -1));
 
+                    AudioClip sound = Resources.Load<AudioClip>("Sounds/SFX/GreenCultistShoot");
+
                     while(greenProjectileCount < 5) {
 
                         
@@ -315,6 +323,8 @@ public class CultistBoss : MonoBehaviour {
                         script1.go();
                         script2.go();
                         script3.go();
+
+                        GetComponent<AudioSource>().PlayOneShot(sound, 0.5f);
 
 
                         greenProjectileCount++;

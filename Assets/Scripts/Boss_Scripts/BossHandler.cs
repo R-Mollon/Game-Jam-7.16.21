@@ -84,6 +84,7 @@ public class BossHandler : MonoBehaviour {
             yield return null;
         }
 
+        transform.parent.Find("RoomBlocker").gameObject.SetActive(true);
 
         moveScript.canMove = true;
         attackScript.canAttack = true;

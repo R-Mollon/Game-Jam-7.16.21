@@ -28,7 +28,7 @@ public class ItemCollection : MonoBehaviour {
 
     IEnumerator FadeAway() {
         float timer = 0.0f;
-        float maxTimer = 8.0f;
+        float maxTimer = 5.0f;
 
         while(timer < maxTimer) {
             timer += Time.deltaTime;

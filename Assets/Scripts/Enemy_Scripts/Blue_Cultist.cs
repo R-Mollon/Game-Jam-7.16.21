@@ -76,6 +76,8 @@ public class Blue_Cultist : MonoBehaviour {
 
                             Instantiate(portal, playerTransform.position, Quaternion.identity);
                             Instantiate(portal, playerTransform.position + randomPosVect3, Quaternion.identity);
+
+                            GetComponent<AudioSource>().Play();
                         }
                     }
                     if(timer >= 0.6f && timer < 0.8f) {

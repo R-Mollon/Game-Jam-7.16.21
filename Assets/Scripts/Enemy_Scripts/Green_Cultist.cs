@@ -67,6 +67,8 @@ public class Green_Cultist : MonoBehaviour {
                         GameObject projectile = Instantiate(Resources.Load<GameObject>("Prefabs/GreenCultistProjectile"), transform.position, Quaternion.identity);
                         GreenCultistProjectile script = projectile.GetComponent<GreenCultistProjectile>();
 
+                        GetComponent<AudioSource>().Play();
+
                         lineRenderer.SetPosition(0, transform.position);
                         lineRenderer.SetPosition(1, transform.position);
 

@@ -88,6 +88,7 @@ public class ItemPickup : MonoBehaviour {
         }
 
         if(pickedUp) {
+            GameObject.Find("ItemSpawnManager").GetComponent<AudioSource>().Play();
             GameObject.Find("HUD/Panel/ItemCollection").GetComponent<ItemCollection>().announcePickup(itemName, itemDesc);
             Destroy(gameObject);
         }

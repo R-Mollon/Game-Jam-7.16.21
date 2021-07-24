@@ -87,6 +87,7 @@ public class RoomHandler : MonoBehaviour {
 
             Instantiate(itemToSpawn, transform.position, Quaternion.identity, spawnManager.transform);
 
+            GameObject.Find("World").GetComponent<AudioSource>().Play();
 
             // Light torches
             for(int i = 0; i < torches.Length; i++) {

@@ -47,6 +47,8 @@ public class ChestManager : MonoBehaviour {
                 GameObject selectedItem = spawnManager.GetComponent<ItemSpawnManager>().genRandomChestItem();
                 Instantiate(selectedItem, spawnSpot, Quaternion.identity, spawnManager.transform);
 
+                GetComponent<AudioSource>().Play();
+
                 unlockedText.alpha = 1;
                 notUnlockedText.alpha = 0;
             } else {
