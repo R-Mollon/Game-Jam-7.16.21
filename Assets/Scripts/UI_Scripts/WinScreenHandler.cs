@@ -42,6 +42,8 @@ public class WinScreenHandler : MonoBehaviour {
         foreach(Transform child in GameObject.Find("ItemSpawnManager").transform) {
             Destroy(child.gameObject);
         }
+
+        chosen = false;
     }
 
     public void acceptVictory() {

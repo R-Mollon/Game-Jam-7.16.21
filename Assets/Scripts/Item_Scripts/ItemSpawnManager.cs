@@ -40,13 +40,13 @@ public class ItemSpawnManager : MonoBehaviour {
 
         int randomSelection = Random.Range(0, 1000);
 
-        if(randomSelection < 750) {
-            // 75% chance to get nothing
+        if(randomSelection < 500) {
+            // 50% chance to get nothing
             return new GameObject();
         }
 
         if(randomSelection < 875) {
-            // 50% chance for the item to be a heart
+            // 75% chance for the item to be a heart
             return Resources.Load<GameObject>("Prefabs/Items/HeartPickup");
         }
 

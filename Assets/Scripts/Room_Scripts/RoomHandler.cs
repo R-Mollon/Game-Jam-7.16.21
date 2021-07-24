@@ -42,11 +42,14 @@ public class RoomHandler : MonoBehaviour {
         // 1 in 10 chance to be a chest room instead of having enemies
         int roomType = Random.Range(0, 10);
         if(roomType == 7) {
-            Instantiate(Resources.Load<GameObject>("prefabs/Chest"), transform.position, Quaternion.identity);
+            Instantiate(Resources.Load<GameObject>("prefabs/Chest"), transform.position, Quaternion.identity, GameObject.Find("ItemSpawnManager").transform);
             // Light torches
             for(int i = 0; i < torches.Length; i++) {
                 torches[i].GetComponent<TorchHandler>().light();
             }
+
+            GameObject.Find("World").GetComponent<AudioSource>().Play();
+
             return;
         }
 

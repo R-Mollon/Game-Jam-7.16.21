@@ -29,6 +29,8 @@ public class NextFloorPortal : MonoBehaviour {
             GameObject.Find("HUD/GameEnd/Power").SetActive(true);
             GameObject.Find("HUD/GameEnd/Accept").SetActive(true);
 
+            Destroy(gameObject);
+
             return;
         }
 

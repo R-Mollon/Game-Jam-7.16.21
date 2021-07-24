@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
-  maxHealth: 15
+  maxHealth: 20
 --- !u!82 &-2697834350186773228
 AudioSource:
   m_ObjectHideFlags: 0

@@ -125,6 +125,7 @@ public class BossHandler : MonoBehaviour {
             bossBar.rectTransform.localPosition = new Vector3((395f - (395f * healthPercentage)) / -2, -196, 0);
 
             if(bossHealth <= 0) {
+                transform.parent.Find("RoomBlocker").gameObject.SetActive(false);
                 break;
             }
 
