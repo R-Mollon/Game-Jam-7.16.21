@@ -86,6 +86,12 @@ public class ItemPickup : MonoBehaviour {
         if(damageScript.maxHealth > 18) {
             damageScript.maxHealth = 18;
         }
+        if(moveScript.playerSpeed > 15.0f) {
+            moveScript.playerSpeed = 15.0f;
+        }
+        if(damageScript.playerHealth > damageScript.maxHealth) {
+            damageScript.playerHealth = damageScript.maxHealth;
+        }
 
         if(pickedUp) {
             GameObject.Find("ItemSpawnManager").GetComponent<AudioSource>().Play();
